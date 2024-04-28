@@ -1,0 +1,3 @@
+com.wiflish.luban.framework.mq.redis.config.RedisMQProducerAutoConfiguration
+com.wiflish.luban.framework.mq.redis.config.RedisMQConsumerAutoConfiguration
+com.wiflish.luban.framework.mq.rabbitmq.config.RabbitMQAutoConfiguration

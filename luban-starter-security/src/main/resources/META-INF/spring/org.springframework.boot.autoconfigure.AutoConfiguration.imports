@@ -1,0 +1,3 @@
+com.wiflish.luban.framework.security.config.SecurityAutoConfiguration
+com.wiflish.luban.framework.security.config.WebSecurityConfigurerAdapter
+com.wiflish.luban.framework.operatelog.config.OperateLogV2Configuration

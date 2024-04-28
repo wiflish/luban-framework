@@ -1,0 +1,51 @@
+package com.wiflish.luban.framework.apilog.config;
+
+import com.wiflish.luban.framework.apilog.core.filter.ApiAccessLogFilter;
+import com.wiflish.luban.framework.apilog.core.service.ApiAccessLogFrameworkService;
+import com.wiflish.luban.framework.apilog.core.service.ApiAccessLogFrameworkServiceImpl;
+import com.wiflish.luban.framework.apilog.core.service.ApiErrorLogFrameworkService;
+import com.wiflish.luban.framework.apilog.core.service.ApiErrorLogFrameworkServiceImpl;
+import com.wiflish.luban.framework.common.enums.WebFilterOrderEnum;
+import com.wiflish.luban.framework.web.config.WebAutoConfiguration;
+import com.wiflish.luban.framework.web.config.WebProperties;
+import com.wiflish.luban.framework.common.api.logger.ApiAccessLogApi;
+import com.wiflish.luban.framework.common.api.logger.ApiErrorLogApi;
+import jakarta.servlet.Filter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+
+@AutoConfiguration(after = WebAutoConfiguration.class)
+public class ApiLogAutoConfiguration {
+
+    @Bean
+    public ApiAccessLogFrameworkService apiAccessLogFrameworkService(ApiAccessLogApi apiAccessLogApi) {
+        return new ApiAccessLogFrameworkServiceImpl(apiAccessLogApi);
+    }
+
+    @Bean
+    public ApiErrorLogFrameworkService apiErrorLogFrameworkService(ApiErrorLogApi apiErrorLogApi) {
+        return new ApiErrorLogFrameworkServiceImpl(apiErrorLogApi);
+    }
+
+    /**
+     * 创建 ApiAccessLogFilter Bean，记录 API 请求日志
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = "luban.framework.access-log", value = "enable", matchIfMissing = true) // 允许使用 luban.framework.access-log.enable=false 禁用访问日志
+    public FilterRegistrationBean<ApiAccessLogFilter> apiAccessLogFilter(WebProperties webProperties,
+                                                                         @Value("${spring.application.name}") String applicationName,
+                                                                         ApiAccessLogFrameworkService apiAccessLogFrameworkService) {
+        ApiAccessLogFilter filter = new ApiAccessLogFilter(webProperties, applicationName, apiAccessLogFrameworkService);
+        return createFilterBean(filter, WebFilterOrderEnum.API_ACCESS_LOG_FILTER);
+    }
+
+    private static <T extends Filter> FilterRegistrationBean<T> createFilterBean(T filter, Integer order) {
+        FilterRegistrationBean<T> bean = new FilterRegistrationBean<>(filter);
+        bean.setOrder(order);
+        return bean;
+    }
+
+}

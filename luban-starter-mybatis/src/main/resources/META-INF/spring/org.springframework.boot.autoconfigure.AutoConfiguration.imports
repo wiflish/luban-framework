@@ -1,0 +1,2 @@
+com.wiflish.luban.framework.datasource.config.DataSourceAutoConfiguration
+com.wiflish.luban.framework.mybatis.config.MybatisAutoConfiguration

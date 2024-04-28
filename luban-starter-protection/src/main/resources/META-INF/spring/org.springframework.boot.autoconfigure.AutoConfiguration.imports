@@ -1,0 +1,2 @@
+com.wiflish.luban.framework.idempotent.config.IdempotentConfiguration
+com.wiflish.luban.framework.lock4j.config.Lock4jConfiguration

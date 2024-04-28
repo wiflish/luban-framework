@@ -1,0 +1,2 @@
+com.wiflish.luban.framework.quartz.config.AsyncAutoConfiguration
+com.wiflish.luban.framework.quartz.config.QuartzAutoConfiguration

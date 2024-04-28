@@ -1,0 +1,2 @@
+com.wiflish.luban.framework.redis.config.RedisAutoConfiguration
+com.wiflish.luban.framework.redis.config.CacheAutoConfiguration
