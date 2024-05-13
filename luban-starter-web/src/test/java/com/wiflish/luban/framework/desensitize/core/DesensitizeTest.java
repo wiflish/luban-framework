@@ -4,7 +4,6 @@ import com.wiflish.luban.framework.common.util.json.JsonUtils;
 import com.wiflish.luban.framework.desensitize.core.annotation.Address;
 import com.wiflish.luban.framework.desensitize.core.regex.annotation.EmailDesensitize;
 import com.wiflish.luban.framework.desensitize.core.regex.annotation.RegexDesensitize;
-import com.hcbt.bp.framework.desensitize.core.slider.annotation.*;
 import com.wiflish.luban.framework.desensitize.core.slider.annotation.*;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
