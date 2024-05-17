@@ -31,8 +31,6 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
      */
     private static final int REFRESH_PERIOD = 120 * 1000;
 
-    private static final String DEFAULT_KEY = "_";
-
     /**
      * 本地缓存，key为code_语言，value为消息。当key为"code_"，则表示使用默认语言。
      */
@@ -66,10 +64,10 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
         String language = ObjectUtils.isEmpty(locale) ? LocaleContextHolder.getLocale().getLanguage() : locale.getLanguage();
 
         // 获取缓存中对应语言的消息.
-        String messagePattern = LOCALE_MESSAGE_CACHE.get(code + DEFAULT_KEY +language);
+        String messagePattern = LOCALE_MESSAGE_CACHE.get(buildCacheKey(code, language));
 
         if (StrUtil.isEmpty(messagePattern)) {
-            messagePattern = LOCALE_MESSAGE_CACHE.get(code + DEFAULT_KEY);
+            messagePattern = LOCALE_MESSAGE_CACHE.get(buildCacheKey(code, null));
         }
 
         return ObjectUtils.isEmpty(messagePattern) ? "" : messagePattern;
@@ -98,12 +96,10 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
             String locale = i18nMessageDTO.getLocale().toLowerCase();
             String code = i18nMessageDTO.getCode();
             String messagePattern = i18nMessageDTO.getMessage();
-            if (StrUtil.isEmpty(locale)) {
-                LOCALE_MESSAGE_CACHE.put(code + DEFAULT_KEY, messagePattern);
-            } else {
+            if (StrUtil.isNotEmpty(locale)) {
                 LANGUAGE_CACHE.add(Locale.of(locale));
-                LOCALE_MESSAGE_CACHE.put(code + DEFAULT_KEY + locale, messagePattern);
             }
+            LOCALE_MESSAGE_CACHE.put(buildCacheKey(code, locale), messagePattern);
             latestUpdateTime = DateUtils.max(latestUpdateTime, i18nMessageDTO.getUpdateTime());
         });
         long localeCount = allLocaleMessage.stream().map(I18nMessageDTO::getLocale).distinct().count();
@@ -129,10 +125,17 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
             // 获取国际化资源文件中的key和value
             Set<String> keySet = resourceBundle.keySet();
             for (String key : keySet) {
-                LOCALE_MESSAGE_CACHE.put(key + DEFAULT_KEY + locale.getLanguage(), resourceBundle.getString(key));
+                LOCALE_MESSAGE_CACHE.put(buildCacheKey(key, locale.getLanguage()), resourceBundle.getString(key));
                 codeCount++;
             }
         }
         log.info("从配置中加载了{}个code，{}个国家。", codeCount, fileLocaleCount);
+    }
+
+    private String buildCacheKey(String code, String locale) {
+        if (StrUtil.isEmpty(locale)) {
+            return (code + "_").toLowerCase();
+        }
+        return (code + "_" + locale).toLowerCase();
     }
 }
