@@ -230,7 +230,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ServiceException.class)
     public CommonResult<?> serviceExceptionHandler(ServiceException ex) {
         log.info("[serviceExceptionHandler]", ex);
-        String message = renderMessage(ex.getCode() + "" , ex.getMessage());
+        String message = renderMessage(ex.getCode() + "", ex.getMessage(), ex.getMsgParams());
         return CommonResult.error(ex.getCode(), message);
     }
 

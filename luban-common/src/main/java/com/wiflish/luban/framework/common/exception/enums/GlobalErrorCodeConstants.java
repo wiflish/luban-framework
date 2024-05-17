@@ -36,6 +36,7 @@ public interface GlobalErrorCodeConstants {
     ErrorCode DEMO_DENY = new ErrorCode(901, "Demo Mode.");
     ErrorCode RECORD_NOT_FOUND = new ErrorCode(902, "Record Not Found.");
     ErrorCode DUPLICATE_KEY_ERROR = new ErrorCode(903, "Duplicate Key Error."); // 唯一键重复
+    ErrorCode QUERY_DATE_RANG_ERROR = new ErrorCode(904, "查询日期范围不能超过{0}天");
 
     ErrorCode UNKNOWN = new ErrorCode(999, "Server Error.");
 

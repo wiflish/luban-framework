@@ -95,7 +95,7 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
             return;
         }
         allLocaleMessage.forEach(i18nMessageDTO -> {
-            String locale = i18nMessageDTO.getLocale();
+            String locale = i18nMessageDTO.getLocale().toLowerCase();
             String code = i18nMessageDTO.getCode();
             String messagePattern = i18nMessageDTO.getMessage();
             if (StrUtil.isEmpty(locale)) {
