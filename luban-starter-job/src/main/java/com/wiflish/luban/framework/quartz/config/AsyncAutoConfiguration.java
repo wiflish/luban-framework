@@ -21,11 +21,10 @@ public class AsyncAutoConfiguration {
 
             @Override
             public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-                if (!(bean instanceof ThreadPoolTaskExecutor)) {
+                if (!(bean instanceof ThreadPoolTaskExecutor executor)) {
                     return bean;
                 }
                 // 修改提交的任务，接入 TransmittableThreadLocal
-                ThreadPoolTaskExecutor executor = (ThreadPoolTaskExecutor) bean;
                 executor.setTaskDecorator(TtlRunnable::get);
                 return executor;
             }
