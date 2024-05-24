@@ -30,8 +30,8 @@ public class MoneyUtils {
      * @param rate  百分比，例如说 56.77% 则传入 56.77
      * @return 百分比金额
      */
-    public static Integer calculateRatePrice(Integer price, Double rate) {
-        return calculateRatePrice(price, rate, 0, RoundingMode.HALF_UP).intValue();
+    public static Long calculateRatePrice(Long price, Double rate) {
+        return calculateRatePrice(price, rate, 0, RoundingMode.HALF_UP).longValue();
     }
 
     /**
@@ -41,8 +41,8 @@ public class MoneyUtils {
      * @param rate  百分比，例如说 56.77% 则传入 56.77
      * @return 百分比金额
      */
-    public static Integer calculateRatePriceFloor(Integer price, Double rate) {
-        return calculateRatePrice(price, rate, 0, RoundingMode.FLOOR).intValue();
+    public static Long calculateRatePriceFloor(Long price, Double rate) {
+        return calculateRatePrice(price, rate, 0, RoundingMode.FLOOR).longValue();
     }
 
     /**
@@ -53,7 +53,7 @@ public class MoneyUtils {
      * @param percent 折扣（单位分），列如 60.2%，则传入 6020
      * @return 商品总价
      */
-    public static Integer calculator(Integer price, Integer count, Integer percent) {
+    public static Long calculator(Long price, Integer count, Integer percent) {
         price = price * count;
         if (percent == null) {
             return price;
@@ -94,6 +94,18 @@ public class MoneyUtils {
      */
     public static String fenToYuanStr(int fen) {
         return new Money(0, fen).toString();
+    }
+
+    /**
+     * 分转元（字符串）
+     * <p>
+     * 例如说 fen 为 1 时，则结果为 0.01
+     *
+     * @param fen 分
+     * @return 元
+     */
+    public static String fenToYuanStr(long fen) {
+        return fenToYuanStr((int) fen);
     }
 
     /**
