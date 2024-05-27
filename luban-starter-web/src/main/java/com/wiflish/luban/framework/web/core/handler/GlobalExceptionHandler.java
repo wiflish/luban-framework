@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
@@ -262,15 +263,29 @@ public class GlobalExceptionHandler {
             return message;
         }
         String retMsg = messageSourceFacade.getMessage(code, params);
-        return StrUtil.isEmpty(retMsg) ? message : retMsg;
+        return renderMessage0(retMsg, message, params);
     }
 
     private String renderMessage(ErrorCode errorCode, String... params) {
         if (messageSourceFacade == null) {
             return errorCode.getMsg();
         }
-        String message = messageSourceFacade.getMessage(errorCode.getCode() + "", params);
-        return StrUtil.isEmpty(message) ? errorCode.getMsg() : message;
+        String retMsg = messageSourceFacade.getMessage(errorCode.getCode() + "", params);
+        return renderMessage0(retMsg, errorCode.getMsg(), params);
+    }
+
+    private static String renderMessage0(String retMsg, String message, String... params) {
+        if (StrUtil.isNotEmpty(retMsg)) {
+            return retMsg;
+        }
+        if (params == null || params.length == 0) {
+            return message;
+        }
+        try {
+            return MessageFormat.format(message, (Object[]) params);
+        } catch (Exception e) {
+            return message;
+        }
     }
 
     private void createExceptionLog(HttpServletRequest req, Throwable e) {
