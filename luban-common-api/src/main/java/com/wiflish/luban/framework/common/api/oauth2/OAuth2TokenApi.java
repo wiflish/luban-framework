@@ -45,4 +45,12 @@ public interface OAuth2TokenApi {
      */
     OAuth2AccessTokenRespDTO refreshAccessToken(String refreshToken, String clientId);
 
+    /**
+     * 获得用户已登录且有效的访问令牌
+     *
+     * @param userId 用户编号
+     * @return 访问令牌的信息
+     */
+    OAuth2AccessTokenRespDTO getAccessToken(Long userId);
+
 }
