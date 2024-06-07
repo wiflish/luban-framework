@@ -1,9 +1,5 @@
 package com.wiflish.luban.framework.ip.core.utils;
 
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.csv.CsvRow;
-import cn.hutool.core.text.csv.CsvUtil;
 import com.wiflish.luban.framework.common.util.object.ObjectUtils;
 import com.wiflish.luban.framework.ip.core.Area;
 import com.wiflish.luban.framework.ip.core.enums.AreaTypeEnum;
@@ -26,43 +22,13 @@ import static com.wiflish.luban.framework.common.util.collection.CollectionUtils
  */
 @Slf4j
 public class AreaUtils {
-
-    /**
-     * 初始化 SEARCHER
-     */
-    @SuppressWarnings("InstantiationOfUtilityClass")
-    private final static AreaUtils INSTANCE = new AreaUtils();
-
     /**
      * Area 内存缓存，提升访问速度
      */
     private static Map<Integer, Area> areas;
 
     private AreaUtils() {
-        long now = System.currentTimeMillis();
         areas = new HashMap<>();
-        areas.put(Area.ID_GLOBAL, new Area(Area.ID_GLOBAL, "全球", 0,
-                null, new ArrayList<>()));
-        // 从 csv 中加载数据
-        List<CsvRow> rows = CsvUtil.getReader().read(ResourceUtil.getUtf8Reader("area.csv")).getRows();
-        rows.remove(0); // 删除 header
-        for (CsvRow row : rows) {
-            // 创建 Area 对象
-            Area area = new Area(Integer.valueOf(row.get(0)), row.get(1), Integer.valueOf(row.get(2)),
-                    null, new ArrayList<>());
-            // 添加到 areas 中
-            areas.put(area.getId(), area);
-        }
-
-        // 构建父子关系：因为 Area 中没有 parentId 字段，所以需要重复读取
-        for (CsvRow row : rows) {
-            Area area = areas.get(Integer.valueOf(row.get(0))); // 自己
-            Area parent = areas.get(Integer.valueOf(row.get(3))); // 父
-            Assert.isTrue(area != parent, "{}:父子节点相同", area.getName());
-            area.setParent(parent);
-            parent.getChildren().add(area);
-        }
-        log.info("启动加载 AreaUtils 成功，耗时 ({}) 毫秒", System.currentTimeMillis() - now);
     }
 
     /**
