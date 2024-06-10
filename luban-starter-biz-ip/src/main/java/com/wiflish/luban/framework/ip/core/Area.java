@@ -32,24 +32,26 @@ public class Area {
      * 编号
      */
     private Integer id;
+
+    /**
+     * 父级id
+     */
+    private Integer parentId;
+
+    /**
+     * 父级id
+     */
+    private List<Integer> parentPath;
+
     /**
      * 名字
      */
     private String name;
+
     /**
      * 类型
      *
      * 枚举 {@link AreaTypeEnum}
      */
     private Integer type;
-
-    /**
-     * 父节点
-     */
-    private Area parent;
-    /**
-     * 子节点
-     */
-    private List<Area> children;
-
 }

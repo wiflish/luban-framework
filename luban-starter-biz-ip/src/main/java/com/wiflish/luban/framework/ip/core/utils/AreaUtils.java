@@ -1,19 +1,19 @@
 package com.wiflish.luban.framework.ip.core.utils;
 
-import com.wiflish.luban.framework.common.util.object.ObjectUtils;
 import com.wiflish.luban.framework.ip.core.Area;
+import com.wiflish.luban.framework.ip.core.AreaService;
 import com.wiflish.luban.framework.ip.core.enums.AreaTypeEnum;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.wiflish.luban.framework.common.util.collection.CollectionUtils.convertList;
-import static com.wiflish.luban.framework.common.util.collection.CollectionUtils.findFirst;
 
 /**
  * 区域工具类
@@ -28,7 +28,17 @@ public class AreaUtils {
     private static Map<Integer, Area> areas;
 
     private AreaUtils() {
-        areas = new HashMap<>();
+    }
+
+    public static void init(AreaService areaService) {
+        if (areaService != null) {
+            List<Area> areaList = areaService.loadAllAreas();
+            areas = areaList.stream().collect(Collectors.toConcurrentMap(Area::getId, Function.identity()));
+            log.info("[getArea][初始化 Area 数量为 {}]", areaService.loadAllAreas().size());
+        } else {
+            areas = new ConcurrentHashMap<>();
+            log.info("[getArea][初始化 Area 数量为 0]");
+        }
     }
 
     /**
@@ -39,57 +49,6 @@ public class AreaUtils {
      */
     public static Area getArea(Integer id) {
         return areas.get(id);
-    }
-
-    /**
-     * 获得指定区域对应的编号
-     *
-     * @param pathStr 区域路径，例如说：河南省/石家庄市/新华区
-     * @return 区域
-     */
-    public static Area parseArea(String pathStr) {
-        String[] paths = pathStr.split("/");
-        Area area = null;
-        for (String path : paths) {
-            if (area == null) {
-                area = findFirst(areas.values(), item -> item.getName().equals(path));
-            } else {
-                area = findFirst(area.getChildren(), item -> item.getName().equals(path));
-            }
-        }
-        return area;
-    }
-
-    /**
-     * 获取所有节点的全路径名称如：河南省/石家庄市/新华区
-     *
-     * @param areas 地区树
-     * @return 所有节点的全路径名称
-     */
-    public static List<String> getAreaNodePathList(List<Area> areas) {
-        List<String> paths = new ArrayList<>();
-        areas.forEach(area -> getAreaNodePathList(area, "", paths));
-        return paths;
-    }
-
-    /**
-     * 构建一棵树的所有节点的全路径名称，并将其存储为 "祖先/父级/子级" 的形式
-     *
-     * @param node  父节点
-     * @param path  全路径名称
-     * @param paths 全路径名称列表，省份/城市/地区
-     */
-    private static void getAreaNodePathList(Area node, String path, List<String> paths) {
-        if (node == null) {
-            return;
-        }
-        // 构建当前节点的路径
-        String currentPath = path.isEmpty() ? node.getName() : path + "/" + node.getName();
-        paths.add(currentPath);
-        // 递归遍历子节点
-        for (Area child : node.getChildren()) {
-            getAreaNodePathList(child, currentPath, paths);
-        }
     }
 
     /**
@@ -125,16 +84,11 @@ public class AreaUtils {
 
         // 格式化
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < AreaTypeEnum.values().length; i++) { // 避免死循环
-            sb.insert(0, area.getName());
-            // “递归”父节点
-            area = area.getParent();
-            if (area == null
-                    || ObjectUtils.equalsAny(area.getId(), Area.ID_GLOBAL, Area.ID_CHINA)) { // 跳过父节点为中国的情况
-                break;
-            }
-            sb.insert(0, separator);
+        for (Integer parentId : area.getParentPath()) {
+            sb.append(areas.get(parentId).getName()).append(separator);
         }
+        sb.append(area.getName());
+
         return sb.toString();
     }
 
@@ -158,21 +112,19 @@ public class AreaUtils {
      * @return 上级区域编号
      */
     public static Integer getParentIdByType(Integer id, @NonNull AreaTypeEnum type) {
-        for (int i = 0; i < Byte.MAX_VALUE; i++) {
-            Area area = AreaUtils.getArea(id);
-            if (area == null) {
-                return null;
+        Area area = areas.get(id);
+        if (area == null) {
+            return null;
+        }
+        if (Objects.equals(area.getType(), type.getType())) {
+            return area.getId();
+        }
+        List<Integer> parentPath = area.getParentPath();
+        for (Integer parentId : parentPath) {
+            Area parent = areas.get(parentId);
+            if (Objects.equals(parent.getType(), type.getType())) {
+                return parent.getId();
             }
-            // 情况一：匹配到，返回它
-            if (type.getType().equals(area.getType())) {
-                return area.getId();
-            }
-            // 情况二：找到根节点，返回空
-            if (area.getParent() == null || area.getParent().getId() == null) {
-                return null;
-            }
-            // 其它：继续向上查找
-            id = area.getParent().getId();
         }
         return null;
     }

@@ -22,8 +22,6 @@ public class AreaUtilsTest {
         assertEquals(area.getId(), 110100);
         assertEquals(area.getName(), "北京市");
         assertEquals(area.getType(), AreaTypeEnum.CITY.getType());
-        assertEquals(area.getParent().getId(), 110000);
-        assertEquals(area.getChildren().size(), 16);
     }
 
     @Test
