@@ -31,14 +31,17 @@ public class AreaUtils {
     }
 
     public static void init(AreaService areaService) {
+        if (areas != null && !areas.isEmpty()) {
+            log.info("[getArea][已初始化]");
+            return;
+        }
         if (areaService != null) {
             List<Area> areaList = areaService.loadAllAreas();
             areas = areaList.stream().collect(Collectors.toConcurrentMap(Area::getId, Function.identity()));
-            log.info("[getArea][初始化 Area 数量为 {}]", areaService.loadAllAreas().size());
         } else {
             areas = new ConcurrentHashMap<>();
-            log.info("[getArea][初始化 Area 数量为 0]");
         }
+        log.info("[getArea][初始化 Area 数量为 {}]", areas.size());
     }
 
     /**
