@@ -34,4 +34,7 @@ public class SortingField implements Serializable {
      */
     private String order;
 
+    public boolean isAsc() {
+        return ORDER_ASC.equalsIgnoreCase(order);
+    }
 }
