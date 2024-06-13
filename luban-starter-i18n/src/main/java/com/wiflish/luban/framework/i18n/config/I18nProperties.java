@@ -19,12 +19,22 @@ public class I18nProperties {
     private Boolean enable = ENABLE_DEFAULT;
 
     /**
-     * 默认语言
+     * 语言
      */
-    private String language = "en";
+    private String language = "zh-CN";
 
     /**
-     * 默认货币
+     * 货币
      */
-    private String currency = "USD";
+    private String currency = "¥";
+
+    /**
+     * 货币编码
+     */
+    private String currencyCode = "CNY";
+
+    /**
+     * 国家编码
+     */
+    private String stateCode = "CN";
 }
