@@ -151,6 +151,15 @@ public class LocalDateTimeUtils {
     }
 
     /**
+     * 获取明天的开始时间
+     *
+     * @return 昨天
+     */
+    public static LocalDateTime getTomorrow() {
+        return LocalDateTimeUtil.beginOfDay(LocalDateTime.now().plusDays(1));
+    }
+
+    /**
      * 获取本月的开始时间
      *
      * @return 本月
@@ -168,4 +177,12 @@ public class LocalDateTimeUtils {
         return LocalDateTime.now().with(TemporalAdjusters.firstDayOfYear()).with(LocalTime.MIN);
     }
 
+    /**
+     * 获取今天开始到明天0点的今天时间范围。
+     *
+     * @return 时间范围
+     */
+    public static LocalDateTime[] getTodayRange() {
+        return new LocalDateTime[]{getToday(), getTomorrow()};
+    }
 }
