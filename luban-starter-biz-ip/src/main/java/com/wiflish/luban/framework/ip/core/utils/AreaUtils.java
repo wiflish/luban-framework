@@ -6,12 +6,12 @@ import com.wiflish.luban.framework.ip.core.enums.AreaTypeEnum;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.wiflish.luban.framework.common.util.collection.CollectionUtils.convertList;
 
@@ -35,11 +35,21 @@ public class AreaUtils {
             log.info("[getArea][已初始化]");
             return;
         }
+        // TODO 后续需要根据国家不同做处理，否则存在性能问题
+        areas = new ConcurrentHashMap<>();
         if (areaService != null) {
             List<Area> areaList = areaService.loadAllAreas();
-            areas = areaList.stream().collect(Collectors.toConcurrentMap(Area::getId, Function.identity()));
-        } else {
-            areas = new ConcurrentHashMap<>();
+            for (Area area : areaList) {
+                if (!area.getType().equals(AreaTypeEnum.DISTRICT.getType())) {
+                    area.setChildren(new ArrayList<>());
+                }
+                areas.put(area.getId(), area);
+                Integer parentId = area.getParentId();
+                Area parentArea = areas.get(parentId);
+                if (parentArea != null) {
+                    parentArea.getChildren().add(area);
+                }
+            }
         }
         log.info("[getArea][初始化 Area 数量为 {}]", areas.size());
     }
@@ -52,6 +62,16 @@ public class AreaUtils {
      */
     public static Area getArea(Integer id) {
         return areas.get(id);
+    }
+
+    /**
+     * 获得区域树
+     *
+     * @param stateCode 国家编码
+     * @return 区域
+     */
+    public static List<Area> getAreaTree(String stateCode) {
+        return areas.values().stream().filter(area -> Objects.equals(area.getCode(), stateCode)).findFirst().orElse(new Area()).getChildren();
     }
 
     /**

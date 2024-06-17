@@ -50,8 +50,17 @@ public class Area {
 
     /**
      * 类型
-     *
      * 枚举 {@link AreaTypeEnum}
      */
     private Integer type;
+
+    /**
+     * 编码
+     */
+    private String code;
+
+    /**
+     * 子节点
+     */
+    private List<Area> children;
 }
