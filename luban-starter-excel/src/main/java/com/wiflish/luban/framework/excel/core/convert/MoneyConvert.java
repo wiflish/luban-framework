@@ -16,7 +16,7 @@ import java.math.RoundingMode;
  *
  * @author wiflish
  */
-public class MoneyConvert implements Converter<Integer> {
+public class MoneyConvert implements Converter<Long> {
 
     @Override
     public Class<?> supportJavaTypeKey() {
@@ -29,7 +29,7 @@ public class MoneyConvert implements Converter<Integer> {
     }
 
     @Override
-    public WriteCellData<String> convertToExcelData(Integer value, ExcelContentProperty contentProperty,
+    public WriteCellData<String> convertToExcelData(Long value, ExcelContentProperty contentProperty,
                                                     GlobalConfiguration globalConfiguration) {
         BigDecimal result = BigDecimal.valueOf(value)
                 .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
