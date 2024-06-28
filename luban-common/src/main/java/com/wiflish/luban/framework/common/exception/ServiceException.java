@@ -54,10 +54,6 @@ public final class ServiceException extends RuntimeException {
         this.msgParams = msgParams;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
     public ServiceException setCode(Integer code) {
         this.code = code;
         return this;

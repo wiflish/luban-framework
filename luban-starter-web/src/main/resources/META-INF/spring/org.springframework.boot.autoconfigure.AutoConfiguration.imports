@@ -3,4 +3,4 @@ com.wiflish.luban.framework.jackson.config.JacksonAutoConfiguration
 com.wiflish.luban.framework.swagger.config.SwaggerAutoConfiguration
 com.wiflish.luban.framework.web.config.WebAutoConfiguration
 com.wiflish.luban.framework.xss.config.XssAutoConfiguration
-com.wiflish.luban.framework.errorcode.config.ErrorCodeAutoConfiguration
+#com.wiflish.luban.framework.errorcode.config.ErrorCodeAutoConfiguration
