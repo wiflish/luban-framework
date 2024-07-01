@@ -21,11 +21,21 @@ public class I18nMessageSourceFacade {
     }
 
     public String getMessage(String code, Object[] args) {
-        return getMessage(code, args, "");
+        return getMessage(null, code, args, "");
     }
 
-    public String getMessage(String code, Object[] args, String defaultMessage) {
-        Locale locale = Locale.of(i18nProperties.getLanguage());
+    public String getMessage(Locale locale, String code, Object[] args) {
+        return getMessage(locale, code, args, "");
+    }
+
+    public String getMessage(Locale locale, String code, Object[] args, String defaultMessage) {
+        if (locale == null) {
+            String language = i18nProperties.getLanguage();
+            if (language.contains("-")) {
+                language = language.replaceAll("-", "_");
+            }
+            locale = Locale.of(language);
+        }
         return messageSource.getMessage(code, args, defaultMessage, locale);
     }
 }

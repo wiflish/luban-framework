@@ -61,7 +61,7 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
             load(true);
             return code;
         }
-        String language = ObjectUtils.isEmpty(locale) ? LocaleContextHolder.getLocale().getLanguage() : locale.getLanguage();
+        String language = ObjectUtils.isEmpty(locale) ? LocaleContextHolder.getLocale().toString() : locale.toString();
 
         // 获取缓存中对应语言的消息.
         String messagePattern = LOCALE_MESSAGE_CACHE.get(buildCacheKey(code, language));
