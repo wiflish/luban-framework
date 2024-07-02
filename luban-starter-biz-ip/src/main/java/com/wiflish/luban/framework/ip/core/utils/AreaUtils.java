@@ -135,9 +135,12 @@ public class AreaUtils {
      * @return 上级区域编号
      */
     public static Integer getParentIdByType(Integer id, @NonNull AreaTypeEnum type) {
+        if (id == null) {
+            return 0;
+        }
         Area area = areas.get(id);
         if (area == null) {
-            return null;
+            return 0;
         }
         if (Objects.equals(area.getType(), type.getType())) {
             return area.getId();
@@ -149,7 +152,7 @@ public class AreaUtils {
                 return parent.getId();
             }
         }
-        return null;
+        return 0;
     }
 
 }
