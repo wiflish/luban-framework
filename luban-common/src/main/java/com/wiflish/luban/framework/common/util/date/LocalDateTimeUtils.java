@@ -185,4 +185,20 @@ public class LocalDateTimeUtils {
     public static LocalDateTime[] getTodayRange() {
         return new LocalDateTime[]{getToday(), getTomorrow()};
     }
+
+    public static LocalDateTime beginOfDay(LocalDateTime time) {
+        return time.with(LocalTime.MIN);
+    }
+
+    public static LocalDateTime endOfDay(LocalDateTime time) {
+        return endOfDay(time, false);
+    }
+
+    public static LocalDateTime endOfDay(LocalDateTime time, boolean truncateMillisecond) {
+        if (truncateMillisecond) {
+            return time.with(LocalTime.of(23, 59, 59));
+        }
+        //MySQL不支持999999999，只支持6个999999。
+        return time.with(LocalTime.of(23, 59, 59, 999999000));
+    }
 }
