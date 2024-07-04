@@ -46,6 +46,12 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        //不记录管理后台的请求日志.
+        if (request.getRequestURI().contains(webProperties.getAdminApi().getPrefix())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 获得开始时间
         LocalDateTime beginTime = LocalDateTime.now();
         // 提前获得参数，避免 XssFilter 过滤处理
