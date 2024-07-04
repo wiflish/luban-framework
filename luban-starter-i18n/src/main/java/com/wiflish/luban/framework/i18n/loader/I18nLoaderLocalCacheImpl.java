@@ -70,7 +70,7 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
             messagePattern = LOCALE_MESSAGE_CACHE.get(buildCacheKey(code, null));
         }
 
-        return ObjectUtils.isEmpty(messagePattern) ? "" : messagePattern;
+        return ObjectUtils.isEmpty(messagePattern) ? code : messagePattern;
     }
 
     @EventListener(ApplicationReadyEvent.class)
