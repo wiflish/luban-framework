@@ -269,11 +269,11 @@ public class GlobalExceptionHandler {
             return message;
         }
         String retMsg = messageSourceFacade.getMessage(locale, code, params);
-        return renderMessage0(retMsg, message, params);
+        return renderMessage0(retMsg, code, message, params);
     }
 
-    private static String renderMessage0(String retMsg, String message, String... params) {
-        if (StrUtil.isNotEmpty(retMsg)) {
+    private static String renderMessage0(String retMsg, String code, String message, String... params) {
+        if (StrUtil.isNotEmpty(retMsg) && !StrUtil.equals(retMsg, code, true)) {
             return retMsg;
         }
         if (params == null || params.length == 0) {
