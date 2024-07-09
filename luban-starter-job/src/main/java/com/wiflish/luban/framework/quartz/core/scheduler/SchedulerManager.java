@@ -107,6 +107,21 @@ public class SchedulerManager {
     }
 
     /**
+     * 判断 Quartz 中的 Job 是否存在
+     *
+     * @param jobHandlerName 任务处理器的名字
+     * @return 是否存在
+     */
+    public boolean existsJob(String jobHandlerName) {
+        try {
+            JobDetail jobDetail = scheduler.getJobDetail(new JobKey(jobHandlerName));
+            return jobDetail != null;
+        } catch (SchedulerException e) {
+            return true;
+        }
+    }
+
+    /**
      * 立即触发一次 Quartz 中的 Job
      *
      * @param jobId 任务编号

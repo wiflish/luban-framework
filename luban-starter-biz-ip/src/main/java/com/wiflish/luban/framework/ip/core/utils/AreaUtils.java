@@ -1,5 +1,6 @@
 package com.wiflish.luban.framework.ip.core.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.wiflish.luban.framework.ip.core.Area;
 import com.wiflish.luban.framework.ip.core.AreaService;
 import com.wiflish.luban.framework.ip.core.enums.AreaTypeEnum;
@@ -86,7 +87,6 @@ public class AreaUtils {
 
     /**
      * 格式化区域
-     *
      * 例如说：
      * 1. id = “静安区”时：上海 上海市 静安区
      * 2. id = “上海市”时：上海 上海市
@@ -99,20 +99,57 @@ public class AreaUtils {
      * @return 格式化后的区域
      */
     public static String format(Integer id, String separator) {
+        return format(id, separator, true);
+    }
+
+    /**
+     * 格式化区域，
+     * <p>
+     * 国外格式: 区, 市, 省
+     * </p>
+     * <p>
+     * 国内格式：省，市，区
+     * </p>
+     *
+     * @param id            区域编号
+     * @param chineseFormat 是否使用中文格式
+     * @return 格式化后的区域
+     */
+    public static String format(Integer id, boolean chineseFormat) {
+        return format(id, ",", chineseFormat);
+    }
+
+    /**
+     * 格式化区域，
+     * <p>
+     * 国外格式: 区, 市, 省
+     * </p>
+     * <p>
+     * 国内格式：省，市，区
+     * </p>
+     *
+     * @param id        区域编号
+     * @param separator 分隔符
+     * @return 格式化后的区域
+     */
+    public static String format(Integer id, String separator, boolean chineseFormat) {
         // 获得区域
         Area area = areas.get(id);
         if (area == null) {
             return null;
         }
+        List<String> regions = CollectionUtil.newArrayList();
 
         // 格式化
-        StringBuilder sb = new StringBuilder();
         for (Integer parentId : area.getParentPath()) {
-            sb.append(areas.get(parentId).getName()).append(separator);
+            regions.add(areas.get(parentId).getName());
         }
-        sb.append(area.getName());
+        regions.add(area.getName());
+        if (chineseFormat) {
+            return String.join(separator, regions);
+        }
 
-        return sb.toString();
+        return String.join(separator, regions.reversed());
     }
 
     /**
