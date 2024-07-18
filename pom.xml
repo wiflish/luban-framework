@@ -26,6 +26,7 @@
         <module>luban-starter-biz-ip</module>
         <module>luban-starter-i18n</module>
         <module>luban-starter-test</module>
+        <module>luban-starter-pay</module>
     </modules>
 
     <properties>
@@ -89,6 +90,7 @@
         <jimureport.version>1.6.6-beta2</jimureport.version>
         <xercesImpl.version>2.12.2</xercesImpl.version>
         <weixin-java.version>4.6.0</weixin-java.version>
+        <xendit-java.version>1.23.0</xendit-java.version>
     </properties>
     <build>
         <plugins>
@@ -614,6 +616,11 @@
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId> <!-- 实现 Spring Boot Admin Server 服务端 -->
                 <version>${spring-boot-admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xendit</groupId>
+                <artifactId>xendit-java-lib</artifactId>
+                <version>${xendit-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
