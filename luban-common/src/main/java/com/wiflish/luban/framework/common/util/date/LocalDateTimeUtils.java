@@ -2,10 +2,8 @@ package com.wiflish.luban.framework.common.util.date;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 
@@ -200,5 +198,18 @@ public class LocalDateTimeUtils {
         }
         //MySQL不支持999999999，只支持6个999999。
         return time.with(LocalTime.of(23, 59, 59, 999999000));
+    }
+
+    /**
+     * 标准时区转化为北京时间.
+     *
+     * @param gmtTime gmt时间
+     * @return 北京时间
+     */
+    public static LocalDateTime gmt2Beijing(String gmtTime) {
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(gmtTime, DateTimeFormatter.ISO_DATE_TIME);
+        ZonedDateTime beijingTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Shanghai"));
+
+        return beijingTime.toLocalDateTime();
     }
 }
