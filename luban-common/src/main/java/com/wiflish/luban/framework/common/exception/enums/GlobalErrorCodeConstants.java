@@ -38,6 +38,8 @@ public interface GlobalErrorCodeConstants {
     ErrorCode DUPLICATE_KEY_ERROR = new ErrorCode(903, "Duplicate Key Error."); // 唯一键重复
     ErrorCode QUERY_DATE_RANG_ERROR = new ErrorCode(904, "The query date range cannot exceed {0} days.");
 
+    ErrorCode INVOKER_ERROR = new ErrorCode(980, "Invoker error, Please try again later");
+
     ErrorCode UNKNOWN = new ErrorCode(999, "Server Error.");
 
 }
