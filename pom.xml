@@ -70,6 +70,7 @@
         <velocity.version>2.3</velocity.version>
         <screw.version>1.0.5</screw.version>
         <fastjson.version>1.2.83</fastjson.version>
+        <fastjson2.version>2.0.52</fastjson2.version>
         <guava.version>33.0.0-jre</guava.version>
         <guice.version>5.1.0</guice.version>
         <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
@@ -475,7 +476,11 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2-extension-spring6</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.smallbun.screw</groupId>
                 <artifactId>screw-core</artifactId> <!-- 实现数据库文档 -->
