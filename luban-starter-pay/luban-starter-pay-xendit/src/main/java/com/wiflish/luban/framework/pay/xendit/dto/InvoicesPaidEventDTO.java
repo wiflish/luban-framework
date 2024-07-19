@@ -2,11 +2,6 @@ package com.wiflish.luban.framework.pay.xendit.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 /**
  * Invoices paid webhook的请求参数.
  * <p>
@@ -41,19 +36,4 @@ public class InvoicesPaidEventDTO {
     private String currency;
     private String payment_channel;
     private String payment_destination;
-
-    /**
-     * 把支付的格林威治时间转化为北京时间。
-     *
-     * @return 支付时间的北京时间
-     */
-    public LocalDateTime getPaidAtBeijingTime() {
-        if (paid_at == null) {
-            return null;
-        }
-
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(paid_at, DateTimeFormatter.ISO_DATE_TIME);
-        ZonedDateTime beijingTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Shanghai"));
-        return beijingTime.toLocalDateTime();
-    }
 }
