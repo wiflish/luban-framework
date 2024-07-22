@@ -9,24 +9,37 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>luban-starter-pay-xendit</artifactId>
+    <artifactId>luban-starter-pay-core</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.wiflish.luban</groupId>
             <artifactId>luban-common</artifactId>
         </dependency>
+
+        <!-- Spring 核心 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 工具类相关 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Test 测试相关 -->
         <dependency>
             <groupId>com.wiflish.luban</groupId>
-            <artifactId>luban-starter-pay-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.xendit</groupId>
-            <artifactId>xendit-java-lib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2-extension-spring6</artifactId>
+            <artifactId>luban-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

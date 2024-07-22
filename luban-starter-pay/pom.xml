@@ -13,6 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>luban-starter-pay-core</module>
         <module>luban-starter-pay-xendit</module>
+        <module>luban-starter-pay-wechat</module>
+        <module>luban-starter-pay-alipay</module>
     </modules>
 </project>

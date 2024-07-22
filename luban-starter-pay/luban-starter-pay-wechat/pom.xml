@@ -9,24 +9,18 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>luban-starter-pay-xendit</artifactId>
+    <artifactId>luban-starter-pay-wechat</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.wiflish.luban</groupId>
-            <artifactId>luban-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.wiflish.luban</groupId>
             <artifactId>luban-starter-pay-core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>com.xendit</groupId>
-            <artifactId>xendit-java-lib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2-extension-spring6</artifactId>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
         </dependency>
     </dependencies>
+
 </project>
