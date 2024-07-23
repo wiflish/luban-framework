@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.wiflish.luban</groupId>
         <artifactId>luban-starter-pay</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>luban-starter-pay-alipay</artifactId>
