@@ -1,1 +1,1 @@
-config.com.wiflish.luban.framework.pay.PayAutoConfiguration
+com.wiflish.luban.framework.pay.config.PayAutoConfiguration

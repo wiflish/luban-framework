@@ -7,7 +7,6 @@ import com.wiflish.luban.framework.pay.core.client.PayClient;
 import com.wiflish.luban.framework.pay.core.client.PayClientConfig;
 import com.wiflish.luban.framework.pay.core.client.PayClientFactory;
 import com.wiflish.luban.framework.pay.core.client.impl.mock.MockPayClient;
-import com.wiflish.luban.framework.pay.core.client.PayChannelConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -24,10 +23,11 @@ import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.
  */
 @Slf4j
 public class PayClientFactoryImpl implements PayClientFactory {
+    private final List<PayChannelConfig> payChannelConfigs;
 
     /**
      * 支付客户端 Map
-     *
+     * <p>
      * key：渠道编号
      */
     private final ConcurrentMap<Long, AbstractPayClient<?>> clients = new ConcurrentHashMap<>();
@@ -38,14 +38,20 @@ public class PayClientFactoryImpl implements PayClientFactory {
     private final Map<String, Class<?>> clientClass = new ConcurrentHashMap<>();
 
     public PayClientFactoryImpl(List<PayChannelConfig> payChannelConfigs) {
+        this.payChannelConfigs = payChannelConfigs;
         // Mock 支付客户端
         clientClass.put(MOCK.getCode(), MockPayClient.class);
-        payChannelConfigs.forEach(config -> registerPayClientClass(config.getChannelCode(), config.getPayClientConfig()));
+        payChannelConfigs.forEach(config -> registerPayClientClass(config.getChannelCode(), config.getPayClient()));
     }
 
     @Override
     public void registerPayClientClass(String channelCode, Class<?> payClientClass) {
         clientClass.put(channelCode, payClientClass);
+    }
+
+    @Override
+    public PayChannelConfig getPayChannelConfig(String code) {
+        return payChannelConfigs.stream().filter(config -> config.getChannelCode().equals(code)).findFirst().orElse(null);
     }
 
     @Override

@@ -80,7 +80,7 @@ public class XenditInvoicePayClient extends AbstractPayClient<XenditPayClientCon
         PayOrderRespDTO respDTO = new PayOrderRespDTO();
 
         respDTO.setChannelOrderNo(invoice.getId());
-        respDTO.setDisplayMode(PayOrderDisplayModeEnum.URL.getMode());
+        respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
         respDTO.setDisplayContent(invoice.getInvoiceUrl());
 
         return respDTO;

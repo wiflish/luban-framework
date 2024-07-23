@@ -6,6 +6,13 @@ package com.wiflish.luban.framework.pay.core.client;
  * @author 芋道源码
  */
 public interface PayClientFactory {
+    /**
+     * 获得支付渠道配置
+     *
+     * @param code 渠道编码.
+     * @return 渠道配置
+     */
+    PayChannelConfig getPayChannelConfig(String code);
 
     /**
      * 获得支付客户端
