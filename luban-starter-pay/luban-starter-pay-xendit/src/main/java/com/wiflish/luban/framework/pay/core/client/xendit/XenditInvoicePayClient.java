@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderRespDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.refund.PayRefundRespDTO;
@@ -23,6 +24,7 @@ import com.xendit.XenditClient;
 import com.xendit.model.Invoice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
@@ -129,11 +131,17 @@ public class XenditInvoicePayClient extends AbstractPayClient<XenditPayClientCon
 
     @Override
     protected PayRefundRespDTO doUnifiedRefund(PayRefundUnifiedReqDTO reqDTO) {
-//        Payout payout = xenditClient.payout.createPayout(reqDTO.getOutTradeNo(), reqDTO.getRefundPrice() / 100);
-//        payout.setResponseHeaders(null); //不需要打印请求头.
-
-        PaymentRefundDTO paymentRefundDTO = httpRequest(XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), reqDTO, PaymentRefundDTO.class);
-//        PayoutDTO payoutDTO = httpRequest(XENDIT_PAYOUT_URL, HttpMethod.POST, config.getApiKey(), reqDTO, PayoutDTO.class);
+        PaymentRefundDTO paymentRefundDTO = null;
+        try {
+            paymentRefundDTO = httpRequest(XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), reqDTO, PaymentRefundDTO.class);
+        } catch (HttpClientErrorException e) {
+            log.error("发起退款调用失败, 渠道: xenditInvoice , req: {}, resp: {}", JSON.toJSONString(reqDTO), JSON.toJSONString(paymentRefundDTO), e);
+            String responseBodyAsString = e.getResponseBodyAsString();
+            JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
+            PayRefundRespDTO payRefundRespDTO = PayRefundRespDTO.failureOf(reqDTO.getOutRefundNo(), responseBodyAsString);
+            payRefundRespDTO.setChannelErrorCode(jsonObject.getString("error_code")).setChannelErrorMsg(jsonObject.getString("message"));
+            return payRefundRespDTO;
+        }
 
         return PayRefundRespDTO.waitingOf(paymentRefundDTO.getId(), reqDTO.getOutRefundNo(), paymentRefundDTO);
     }
