@@ -65,6 +65,11 @@ public enum PayChannelEnum {
     XENDIT_INVOICE("xendit_invoice", "payChannel.name.xenditInvoice"),
 
     /**
+     * xendit_eWallet_ovo支付
+     */
+    XENDIT_E_WALLET_OVO("xendit_eWallet_ovo", "payChannel.name.xenditEWalletOvo"),
+
+    /**
      * 模拟支付
      */
     MOCK("mock", "payChannel.name.mock"),
