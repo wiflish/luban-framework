@@ -16,6 +16,7 @@ public class XenditPayClientConfig implements PayClientConfig {
     private String apiKey;
     private String callbackToken;
     private String channelCode;
+    private String successUrl;
 
     @Override
     public void validate(Validator validator) {

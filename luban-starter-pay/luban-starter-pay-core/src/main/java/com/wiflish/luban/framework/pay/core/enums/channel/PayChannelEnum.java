@@ -70,6 +70,11 @@ public enum PayChannelEnum {
     XENDIT_E_WALLET_OVO("xendit_eWallet_ovo", "payChannel.name.xenditEWalletOvo"),
 
     /**
+     * xendit_eWallet_dana 支付
+     */
+    XENDIT_E_WALLET_DANA("xendit_eWallet_dana", "payChannel.name.xenditEWalletDana"),
+
+    /**
      * xendit_credit_card 支付
      */
     XENDIT_CREDIT_CARD("xendit_credit_card", "payChannel.name.xenditCreditCard"),
