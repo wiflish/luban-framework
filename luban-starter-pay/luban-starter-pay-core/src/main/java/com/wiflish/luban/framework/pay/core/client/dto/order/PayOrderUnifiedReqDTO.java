@@ -28,7 +28,6 @@ public class PayOrderUnifiedReqDTO {
     /**
      * 用户电话
      */
-    @NotEmpty
     private String mobile;
 
     // ========== 商户相关字段 ==========
