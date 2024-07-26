@@ -85,8 +85,8 @@ public class XenditEWalletOVOPayClient extends AbstractPayClient<XenditPayClient
 
         PayOrderRespDTO respDTO = new PayOrderRespDTO();
         respDTO.setChannelOrderNo(eWalletCharge.getId());
-        respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
         if (eWalletCharge.getActions() != null) {
+            respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
             respDTO.setDisplayContent(eWalletCharge.getActions().get("mobile_web_checkout_url"));
         }
 
