@@ -20,9 +20,8 @@ import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
 import com.wiflish.luban.framework.pay.xendit.dto.PaymentRefundDTO;
-import com.wiflish.luban.framework.pay.xendit.enums.XenditConstant;
 import com.xendit.XenditClient;
-import com.xendit.model.EWalletCharge;
+import com.xendit.model.CreditCardCharge;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -39,26 +38,26 @@ import java.util.function.Supplier;
 import static cn.hutool.core.date.DatePattern.NORM_DATETIME_FORMATTER;
 import static com.wiflish.luban.framework.common.exception.enums.GlobalErrorCodeConstants.INVOKER_ERROR;
 import static com.wiflish.luban.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.XENDIT_E_WALLET_OVO;
+import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.XENDIT_CREDIT_CARD;
 
 /**
- * OVO钱包支付
+ * Credit Card支付
  *
  * @author wiflish
  * @since 2024-07-25
  */
 @Slf4j
-public class XenditEWalletOVOPayClient extends AbstractPayClient<XenditPayClientConfig> {
+public class XenditCreditCardPayClient extends AbstractPayClient<XenditPayClientConfig> {
     private static final String E_WALLET_URL = "https://api.xendit.co/ewallets/charges";
     private static final String XENDIT_REFUND_URL = "https://api.xendit.co/refunds";
     private XenditClient xenditClient;
     private RestTemplate restTemplate;
 
-    public XenditEWalletOVOPayClient(Long channelId, XenditPayClientConfig config) {
-        super(channelId, XENDIT_E_WALLET_OVO.getCode(), config);
+    public XenditCreditCardPayClient(Long channelId, XenditPayClientConfig config) {
+        super(channelId, XENDIT_CREDIT_CARD.getCode(), config);
     }
 
-    public XenditEWalletOVOPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
+    public XenditCreditCardPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
         super(channelId, channelCode, config);
     }
 
@@ -73,22 +72,19 @@ public class XenditEWalletOVOPayClient extends AbstractPayClient<XenditPayClient
         Map<String, Object> params = new HashMap<>();
         params.put("reference_id", reqDTO.getOutTradeNo());
         params.put("amount", reqDTO.getPrice() / 100);
-        params.put("currency", reqDTO.getCurrency());
+        // FIXME 先写死, 后续改为读系统配置.
+        params.put("currency", "IDR");
         params.put("checkout_method", "ONE_TIME_PAYMENT");
         params.put("channel_code", config.getChannelCode());
+        params.put("channel_properties", reqDTO.getChannelExtras().get("channel_properties"));
 
-        Map<String, Object> channelProperties = new HashMap<>();
-        channelProperties.put(XenditConstant.MOBILE_NUMBER_KEY, StrUtil.addPrefixIfNot(reqDTO.getMobile(), reqDTO.getStatePhonePrefix()));
-        params.put("channel_properties", channelProperties);
-
-        EWalletCharge eWalletCharge = xenditClient.eWallet.createEWalletCharge(params);
+        CreditCardCharge charge = xenditClient.creditCard.createCharge(params);
 
         PayOrderRespDTO respDTO = new PayOrderRespDTO();
-        respDTO.setChannelOrderNo(eWalletCharge.getId());
+
+        respDTO.setChannelOrderNo(charge.getId());
         respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
-        if (eWalletCharge.getActions() != null) {
-            respDTO.setDisplayContent(eWalletCharge.getActions().get("mobile_web_checkout_url"));
-        }
+//        respDTO.setDisplayContent(eWalletCharge.getActions().get(""));
 
         return respDTO;
     }

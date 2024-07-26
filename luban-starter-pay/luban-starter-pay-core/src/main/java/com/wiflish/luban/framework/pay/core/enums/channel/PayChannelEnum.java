@@ -60,14 +60,19 @@ public enum PayChannelEnum {
     ALIPAY_BAR("alipay_bar", "payChannel.name.alipay_bar"),
 
     /**
-     * Xendit invoice支付
+     * Xendit invoice 支付
      */
     XENDIT_INVOICE("xendit_invoice", "payChannel.name.xenditInvoice"),
 
     /**
-     * xendit_eWallet_ovo支付
+     * xendit_eWallet_ovo 支付
      */
     XENDIT_E_WALLET_OVO("xendit_eWallet_ovo", "payChannel.name.xenditEWalletOvo"),
+
+    /**
+     * xendit_credit_card 支付
+     */
+    XENDIT_CREDIT_CARD("xendit_credit_card", "payChannel.name.xenditCreditCard"),
 
     /**
      * 模拟支付

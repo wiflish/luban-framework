@@ -1,7 +1,6 @@
 package com.wiflish.luban.framework.pay.core.client.dto.order;
 
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
-import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +24,12 @@ public class PayOrderUnifiedReqDTO {
      */
     @NotEmpty(message = "用户 IP 不能为空")
     private String userIp;
+
+    /**
+     * 用户电话
+     */
+    @NotEmpty
+    private String mobile;
 
     // ========== 商户相关字段 ==========
 
@@ -66,6 +71,16 @@ public class PayOrderUnifiedReqDTO {
     @NotNull(message = "支付金额不能为空")
     @DecimalMin(value = "0", inclusive = false, message = "支付金额必须大于零")
     private Long price;
+
+    /**
+     * 货币单位，比如：IDR
+     */
+    private String currency;
+
+    /**
+     * 国家电话编码前缀，比如：86
+     */
+    private String statePhonePrefix;
 
     /**
      * 支付过期时间

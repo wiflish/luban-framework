@@ -15,10 +15,12 @@ import lombok.Data;
 public class XenditPayClientConfig implements PayClientConfig {
     private String apiKey;
     private String callbackToken;
+    private String channelCode;
 
     @Override
     public void validate(Validator validator) {
         Assert.notBlank(apiKey);
         Assert.notBlank(callbackToken);
+        Assert.notBlank(channelCode);
     }
 }
