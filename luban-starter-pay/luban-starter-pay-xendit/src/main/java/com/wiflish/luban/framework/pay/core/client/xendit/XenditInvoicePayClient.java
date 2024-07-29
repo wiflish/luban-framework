@@ -19,7 +19,7 @@ import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
-import com.wiflish.luban.framework.pay.xendit.dto.PaymentRefundDTO;
+import com.wiflish.luban.framework.pay.xendit.dto.payment.PaymentRefundDTO;
 import com.xendit.XenditClient;
 import com.xendit.model.Invoice;
 import lombok.extern.slf4j.Slf4j;

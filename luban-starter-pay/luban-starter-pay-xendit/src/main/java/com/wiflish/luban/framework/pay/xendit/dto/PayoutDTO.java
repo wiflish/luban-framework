@@ -1,6 +1,7 @@
 package com.wiflish.luban.framework.pay.xendit.dto;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.wiflish.luban.framework.pay.xendit.dto.payment.ChannelPropertiesDTO;
 import lombok.Data;
 
 /**
@@ -21,7 +22,7 @@ public class PayoutDTO {
     @JSONField(name = "channel_code")
     private String channelCode;
     @JSONField(name = "channel_properties")
-    private ChannelProperties channelProperties;
+    private ChannelPropertiesDTO channelProperties;
     private String currency;
     private int amount;
     private String description;
@@ -33,12 +34,4 @@ public class PayoutDTO {
     @JSONField(name = "failure_code")
     private String failureCode;
     private String metadata;
-
-    @Data
-    public static class ChannelProperties {
-        @JSONField(name = "account_number")
-        private String accountNumber;
-        @JSONField(name = "account_holder_name")
-        private String accountHolderName;
-    }
 }

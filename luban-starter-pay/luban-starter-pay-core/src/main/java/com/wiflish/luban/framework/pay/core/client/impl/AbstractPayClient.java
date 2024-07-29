@@ -1,5 +1,7 @@
 package com.wiflish.luban.framework.pay.core.client.impl;
 
+import com.wiflish.luban.framework.common.exception.ServiceException;
+import com.wiflish.luban.framework.common.util.validation.ValidationUtils;
 import com.wiflish.luban.framework.pay.core.client.PayClient;
 import com.wiflish.luban.framework.pay.core.client.PayClientConfig;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderRespDTO;
@@ -10,11 +12,6 @@ import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferRespD
 import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.exception.PayException;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
-import com.wiflish.luban.framework.common.exception.ServiceException;
-import com.wiflish.luban.framework.common.util.validation.ValidationUtils;
-import com.wiflish.luban.framework.pay.core.client.PayClient;
-import com.wiflish.luban.framework.pay.core.client.PayClientConfig;
-import com.wiflish.luban.framework.pay.core.client.exception.PayException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -78,6 +75,11 @@ public abstract class AbstractPayClient<Config extends PayClientConfig> implemen
     @Override
     public Long getId() {
         return channelId;
+    }
+
+    @Override
+    public PayClientConfig getConfig() {
+        return config;
     }
 
     // ============ 支付相关 ==========

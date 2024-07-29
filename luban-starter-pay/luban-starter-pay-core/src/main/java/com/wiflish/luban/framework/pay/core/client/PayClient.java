@@ -24,6 +24,8 @@ public interface PayClient {
      */
     Long getId();
 
+    PayClientConfig getConfig();
+
     // ============ 支付相关 ==========
 
     /**

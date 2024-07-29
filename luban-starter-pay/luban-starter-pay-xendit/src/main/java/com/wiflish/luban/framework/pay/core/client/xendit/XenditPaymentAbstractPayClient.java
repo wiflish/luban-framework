@@ -18,9 +18,8 @@ import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
-import com.wiflish.luban.framework.pay.xendit.dto.PaymentRefundDTO;
+import com.wiflish.luban.framework.pay.xendit.dto.payment.*;
 import com.xendit.XenditClient;
-import com.xendit.model.EWalletCharge;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -63,27 +62,44 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) throws Throwable {
-        Map<String, Object> params = new HashMap<>();
-        params.put("reference_id", reqDTO.getOutTradeNo());
-        params.put("amount", reqDTO.getPrice() / 100);
-        params.put("currency", reqDTO.getCurrency());
-        params.put("checkout_method", "ONE_TIME_PAYMENT");
-        params.put("channel_code", config.getChannelCode());
-        params.put("channel_properties", channelProperties(reqDTO));
 
-        EWalletCharge eWalletCharge = xenditClient.eWallet.createEWalletCharge(params);
+        PaymentRequestDTO requestDTO = new PaymentRequestDTO();
+
+        requestDTO.setCurrency(reqDTO.getCurrency())
+                .setAmount(reqDTO.getPrice() / 100).setReferenceId(reqDTO.getOutTradeNo())
+                .setPaymentMethod(getPaymentMethod(reqDTO))
+                .setChannelPropertiesDTO(channelProperties(reqDTO));
+
+        PaymentResponseDTO paymentResponseDTO = null;
+        try {
+            paymentResponseDTO = httpRequest(XENDIT_PAYMENT_REQUEST_URL, HttpMethod.POST, config.getApiKey(), requestDTO, PaymentResponseDTO.class);
+        } catch (HttpClientErrorException e) {
+            log.error("发起支付调用失败, 渠道: xendit, req: {}, resp: {}", JSON.toJSONString(requestDTO), JSON.toJSONString(paymentResponseDTO), e);
+            String responseBodyAsString = e.getResponseBodyAsString();
+            JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
+            PayOrderRespDTO payOrderRespDTO = PayOrderRespDTO.waitingOf(null, null, reqDTO.getOutTradeNo(), responseBodyAsString);
+            payOrderRespDTO.setChannelErrorCode(jsonObject.getString("error_code")).setChannelErrorMsg(jsonObject.getString("message"));
+            return payOrderRespDTO;
+        }
 
         PayOrderRespDTO respDTO = new PayOrderRespDTO();
-        respDTO.setChannelOrderNo(eWalletCharge.getId());
-        if (eWalletCharge.getActions() != null && eWalletCharge.getIsRedirectRequired()) {
+        respDTO.setChannelOrderNo(paymentResponseDTO.getId());
+        if (paymentResponseDTO.getActions() != null && !paymentResponseDTO.getActions().isEmpty()) {
             respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
-            respDTO.setDisplayContent(eWalletCharge.getActions().get("mobile_web_checkout_url"));
+            PaymentActionDTO paymentActionDTO = paymentResponseDTO.getActions().stream().filter(PaymentActionDTO::isMobileUrl).findFirst().orElse(null);
+            if (paymentActionDTO == null) {
+                paymentActionDTO = paymentResponseDTO.getActions().stream().filter(PaymentActionDTO::isWebUrl).findFirst().orElse(null);
+            }
+            respDTO.setDisplayContent(paymentActionDTO == null ? null : paymentActionDTO.getUrl());
         }
 
         return respDTO;
     }
 
-    abstract protected Map<String, Object> channelProperties(PayOrderUnifiedReqDTO reqDTO);
+    protected abstract PaymentMethodDTO getPaymentMethod(PayOrderUnifiedReqDTO reqDTO);
+
+    abstract protected ChannelPropertiesDTO channelProperties(PayOrderUnifiedReqDTO reqDTO);
+
 
     @Override
     protected PayOrderRespDTO doParseOrderNotify(Map<String, String> params, String body) throws Throwable {
@@ -164,7 +180,11 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         // 请求头
         HttpHeaders headers = getHeaders(apiKey);
         Object requestObj = null;
-        if (req instanceof PayRefundUnifiedReqDTO xenditReq) {
+        if (req instanceof PaymentRequestDTO xenditReq) {
+            headers.add("idempotency-key", UUID.fastUUID().toString());
+
+            requestObj = JSON.toJSONString(xenditReq);
+        } else if (req instanceof PayRefundUnifiedReqDTO xenditReq) {
             headers.add("idempotency-key", UUID.fastUUID().toString());
 
             Map<String, Object> params = new HashMap<>();

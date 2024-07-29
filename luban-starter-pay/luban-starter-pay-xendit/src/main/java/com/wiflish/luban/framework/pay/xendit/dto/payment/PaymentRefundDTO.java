@@ -1,4 +1,4 @@
-package com.wiflish.luban.framework.pay.xendit.dto;
+package com.wiflish.luban.framework.pay.xendit.dto.payment;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;

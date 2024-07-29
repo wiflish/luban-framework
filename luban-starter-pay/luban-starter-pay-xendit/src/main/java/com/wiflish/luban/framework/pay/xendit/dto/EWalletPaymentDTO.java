@@ -1,6 +1,7 @@
 package com.wiflish.luban.framework.pay.xendit.dto;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.wiflish.luban.framework.pay.xendit.dto.payment.ChannelPropertiesDTO;
 import lombok.Data;
 
 @Data
@@ -63,7 +64,7 @@ public class EWalletPaymentDTO {
     private String paymentMethodId;
 
     @JSONField(name = "channel_properties")
-    private ChannelProperties channelProperties;
+    private ChannelPropertiesDTO channelProperties;
 
     @JSONField(name = "is_redirect_required")
     private Boolean isRedirectRequired;
@@ -84,11 +85,5 @@ public class EWalletPaymentDTO {
     public static class Metadata {
         @JSONField(name = "branch_code")
         private String branchCode;
-    }
-
-    @Data
-    public static class ChannelProperties {
-        @JSONField(name = "success_redirect_url")
-        private String successRedirectUrl;
     }
 }
