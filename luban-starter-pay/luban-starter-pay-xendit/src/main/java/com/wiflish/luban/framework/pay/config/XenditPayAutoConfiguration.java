@@ -1,6 +1,8 @@
 package com.wiflish.luban.framework.pay.config;
 
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditInvoicePayClient;
+import com.wiflish.luban.framework.pay.core.client.xendit.card.XenditCardPayChannelConfig;
+import com.wiflish.luban.framework.pay.core.client.xendit.card.XenditCardPayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.config.*;
 import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.*;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -17,6 +19,12 @@ public class XenditPayAutoConfiguration {
     @ConditionalOnClass(XenditInvoicePayClient.class)
     public XenditInvoicePayChannelConfig xenditInvoicePayChannelConfig() {
         return new XenditInvoicePayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(XenditCardPayClient.class)
+    public XenditCardPayChannelConfig xenditCardPayChannelConfig() {
+        return new XenditCardPayChannelConfig();
     }
 
     @Bean

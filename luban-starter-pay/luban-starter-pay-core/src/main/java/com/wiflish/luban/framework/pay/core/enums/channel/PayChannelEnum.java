@@ -95,9 +95,9 @@ public enum PayChannelEnum {
     XENDIT_E_WALLET_SHOPEEPAY("xendit_eWallet_shopeepay", "payChannel.name.xenditEWalletJeniuspay"),
 
     /**
-     * xendit_credit_card 支付
+     * xendit_card 支付，包含：credit_card / debit_card
      */
-    XENDIT_CREDIT_CARD("xendit_credit_card", "payChannel.name.xenditCreditCard"),
+    XENDIT_CARD("xendit_card", "payChannel.name.xenditCard"),
 
     /**
      * 模拟支付
