@@ -132,10 +132,14 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
     @Override
     protected PayRefundRespDTO doUnifiedRefund(PayRefundUnifiedReqDTO reqDTO) {
         PaymentRefundDTO paymentRefundDTO = null;
+        PaymentRefundReqDTO refundReqDTO = new PaymentRefundReqDTO();
+        refundReqDTO.setReferenceId(reqDTO.getOutRefundNo()).setPaymentRequestId(reqDTO.getChannelOrderNo())
+                .setAmount(reqDTO.getRefundPrice() / 100).setCurrency(reqDTO.getCurrency())
+                .setMetadata(new HashMap<>());
         try {
-            paymentRefundDTO = httpRequest(XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), reqDTO, PaymentRefundDTO.class);
+            paymentRefundDTO = httpRequest(XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), refundReqDTO, PaymentRefundDTO.class);
         } catch (HttpClientErrorException e) {
-            log.error("发起退款调用失败, 渠道: xenditInvoice , req: {}, resp: {}", JSON.toJSONString(reqDTO), JSON.toJSONString(paymentRefundDTO), e);
+            log.error("发起退款调用失败, 渠道: xenditPayment , req: {}, resp: {}", JSON.toJSONString(refundReqDTO), JSON.toJSONString(paymentRefundDTO), e);
             String responseBodyAsString = e.getResponseBodyAsString();
             JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
             PayRefundRespDTO payRefundRespDTO = PayRefundRespDTO.failureOf(reqDTO.getOutRefundNo(), responseBodyAsString);
@@ -179,25 +183,23 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
     private <Req, Resp> Resp httpRequest(String url, HttpMethod httpMethod, String apiKey, Req req, Class<Resp> respClass) {
         // 请求头
         HttpHeaders headers = getHeaders(apiKey);
-        Object requestObj = null;
-        if (req instanceof PaymentRequestDTO xenditReq) {
-            headers.add("idempotency-key", UUID.fastUUID().toString());
-
-            requestObj = JSON.toJSONString(xenditReq);
-        } else if (req instanceof PayRefundUnifiedReqDTO xenditReq) {
-            headers.add("idempotency-key", UUID.fastUUID().toString());
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("reference_id", xenditReq.getOutTradeNo());
-            params.put("invoice_id", xenditReq.getChannelOrderNo());
-            params.put("amount", xenditReq.getRefundPrice() / 100);
-            params.put("currency", "IDR"); //FIXME 先写死, 后续改为读系统配置.
-            requestObj = JSON.toJSONString(params);
-        }
+//        Object requestObj = null;
+//        if (req instanceof PaymentRequestDTO xenditReq) {
+//            requestObj = JSON.toJSONString(xenditReq);
+//        } else if (req instanceof PayRefundUnifiedReqDTO xenditReq) {
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("reference_id", xenditReq.getOutTradeNo());
+//            params.put("payment_request_id", xenditReq.getChannelOrderNo());
+//            params.put("amount", xenditReq.getRefundPrice() / 100);
+//            params.put("currency", "IDR"); //FIXME 先写死, 后续改为读系统配置.
+//            requestObj = JSON.toJSONString(params);
+//        }
+//
+        String requestBody = JSON.toJSONString(req);
 
         // 发送请求
-        log.debug("[xenditRequest][请求参数({})]", requestObj);
-        HttpEntity<Object> requestEntity = new HttpEntity<>(requestObj, headers);
+        log.debug("[xenditRequest][请求参数({})]", requestBody);
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, httpMethod, requestEntity, String.class);
         log.debug("[xenditRequest][响应结果({})]", responseEntity);
         // 处理响应
@@ -213,6 +215,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setBasicAuth(apiKey, "");
+        headers.add("idempotency-key", UUID.fastUUID().toString());
 
         return headers;
     }

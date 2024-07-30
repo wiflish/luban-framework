@@ -67,7 +67,12 @@ public class PayRefundUnifiedReqDTO {
     private String notifyUrl;
 
     /**
-     * 渠道订单号，比如Xendit渠道的invoice_id
+     * 渠道订单号，比如Xendit渠道的invoice_id or payment_request_id
      */
     private String channelOrderNo;
+
+    /**
+     * 货币单位
+     */
+    private String currency;
 }
