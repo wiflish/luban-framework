@@ -3,8 +3,8 @@ package com.wiflish.luban.framework.pay.core.client.xendit.config;
 import com.wiflish.luban.framework.pay.core.client.PayChannelConfig;
 import com.wiflish.luban.framework.pay.core.client.PayClient;
 import com.wiflish.luban.framework.pay.core.client.PayClientConfig;
-import com.wiflish.luban.framework.pay.core.client.xendit.XenditEWalletOVOPayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditPayClientConfig;
+import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.XenditEWalletOVOPayClient;
 import com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum;
 
 /**

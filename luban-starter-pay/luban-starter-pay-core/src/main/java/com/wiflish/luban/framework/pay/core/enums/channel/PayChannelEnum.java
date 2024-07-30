@@ -75,6 +75,16 @@ public enum PayChannelEnum {
     XENDIT_E_WALLET_DANA("xendit_eWallet_dana", "payChannel.name.xenditEWalletDana"),
 
     /**
+     * xendit_eWallet_linkaja 支付
+     */
+    XENDIT_E_WALLET_LINKAJA("xendit_eWallet_linkaja", "payChannel.name.xenditEWalletLinkAja"),
+
+    /**
+     * xendit_eWallet_astrapay 支付
+     */
+    XENDIT_E_WALLET_ASTRAPAY("xendit_eWallet_astrapay", "payChannel.name.xenditEWalletAstrapay"),
+
+    /**
      * xendit_credit_card 支付
      */
     XENDIT_CREDIT_CARD("xendit_credit_card", "payChannel.name.xenditCreditCard"),
