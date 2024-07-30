@@ -13,7 +13,7 @@ public class CardDTO {
     private String currency;
 
     @JSONField(name = "channel_properties")
-    private ChannelPropertiesDTO channelPropertiesDTO;
+    private ChannelPropertiesDTO channelProperties;
 
     @JSONField(name = "card_information")
     private CardInformation cardInformation;
@@ -32,6 +32,9 @@ public class CardDTO {
     public static class CardInformation {
         @JSONField(name = "token_id")
         private String tokenId;
+
+        @JSONField(name = "card_number")
+        private String cardNumber;
 
         @JSONField(name = "masked_card_number")
         private String maskedCardNumber;

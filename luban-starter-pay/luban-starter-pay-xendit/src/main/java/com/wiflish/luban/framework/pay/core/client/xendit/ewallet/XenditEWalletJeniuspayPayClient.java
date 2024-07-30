@@ -6,7 +6,7 @@ import com.wiflish.luban.framework.pay.xendit.dto.payment.ChannelPropertiesDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.XENDIT_E_WALLET_JENIUSPAY;
-import static com.wiflish.luban.framework.pay.xendit.enums.XenditConstant.CASH_TAG_KEY;
+import static com.wiflish.luban.framework.pay.xendit.enums.XenditConstant.MOBILE_NUMBER_KEY;
 
 /**
  * Xendit jeniuspay钱包支付
@@ -23,7 +23,7 @@ public class XenditEWalletJeniuspayPayClient extends XenditEWalletAbstractPayCli
     @Override
     protected ChannelPropertiesDTO channelProperties(PayOrderUnifiedReqDTO reqDTO) {
         ChannelPropertiesDTO channelProperties = new ChannelPropertiesDTO();
-        channelProperties.setCashTag(reqDTO.getChannelExtras().get(CASH_TAG_KEY));
+        channelProperties.setCashTag(reqDTO.getChannelExtras().get(MOBILE_NUMBER_KEY));
 
         return channelProperties;
     }
