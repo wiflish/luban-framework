@@ -38,4 +38,8 @@ public class PaymentActionDTO {
     public boolean isWebUrl() {
         return "WEB".equals(this.urlType);
     }
+
+    public boolean isDeepLink() {
+        return "DEEPLINK".equals(this.urlType);
+    }
 }

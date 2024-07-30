@@ -19,7 +19,6 @@ import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.*;
-import com.xendit.XenditClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -47,7 +46,6 @@ import static com.wiflish.luban.framework.common.exception.util.ServiceException
 public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<XenditPayClientConfig> {
     private static final String XENDIT_PAYMENT_REQUEST_URL = "https://api.xendit.co/payment_requests";
     private static final String XENDIT_REFUND_URL = "https://api.xendit.co/refunds";
-    protected XenditClient xenditClient;
     protected RestTemplate restTemplate;
 
     public XenditPaymentAbstractPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
@@ -56,15 +54,13 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     protected void doInit() {
-        xenditClient = new XenditClient.Builder().setApikey(config.getApiKey()).build();
         restTemplate = SpringUtil.getBean(RestTemplate.class);
     }
 
     @Override
-    protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) throws Throwable {
+    protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) {
 
         PaymentRequestDTO requestDTO = new PaymentRequestDTO();
-
         requestDTO.setCurrency(reqDTO.getCurrency())
                 .setAmount(reqDTO.getPrice() / 100).setReferenceId(reqDTO.getOutTradeNo())
                 .setPaymentMethod(getPaymentMethod(reqDTO))
@@ -73,27 +69,17 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         PaymentResponseDTO paymentResponseDTO = null;
         try {
             paymentResponseDTO = httpRequest(XENDIT_PAYMENT_REQUEST_URL, HttpMethod.POST, config.getApiKey(), requestDTO, PaymentResponseDTO.class);
+
+            return convertPayOrderRespDTO(paymentResponseDTO);
         } catch (HttpClientErrorException e) {
             log.error("发起支付调用失败, 渠道: xendit, req: {}, resp: {}", JSON.toJSONString(requestDTO), JSON.toJSONString(paymentResponseDTO), e);
             String responseBodyAsString = e.getResponseBodyAsString();
             JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
             PayOrderRespDTO payOrderRespDTO = PayOrderRespDTO.waitingOf(null, null, reqDTO.getOutTradeNo(), responseBodyAsString);
             payOrderRespDTO.setChannelErrorCode(jsonObject.getString("error_code")).setChannelErrorMsg(jsonObject.getString("message"));
+
             return payOrderRespDTO;
         }
-
-        PayOrderRespDTO respDTO = new PayOrderRespDTO();
-        respDTO.setChannelOrderNo(paymentResponseDTO.getId());
-        if (paymentResponseDTO.getActions() != null && !paymentResponseDTO.getActions().isEmpty()) {
-            respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
-            PaymentActionDTO paymentActionDTO = paymentResponseDTO.getActions().stream().filter(PaymentActionDTO::isMobileUrl).findFirst().orElse(null);
-            if (paymentActionDTO == null) {
-                paymentActionDTO = paymentResponseDTO.getActions().stream().filter(PaymentActionDTO::isWebUrl).findFirst().orElse(null);
-            }
-            respDTO.setDisplayContent(paymentActionDTO == null ? null : paymentActionDTO.getUrl());
-        }
-
-        return respDTO;
     }
 
     protected abstract PaymentMethodDTO getPaymentMethod(PayOrderUnifiedReqDTO reqDTO);
@@ -125,7 +111,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
     }
 
     @Override
-    protected PayOrderRespDTO doGetOrder(String outTradeNo) throws Throwable {
+    protected PayOrderRespDTO doGetOrder(String outTradeNo) {
         return null;
     }
 
@@ -183,18 +169,6 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
     private <Req, Resp> Resp httpRequest(String url, HttpMethod httpMethod, String apiKey, Req req, Class<Resp> respClass) {
         // 请求头
         HttpHeaders headers = getHeaders(apiKey);
-//        Object requestObj = null;
-//        if (req instanceof PaymentRequestDTO xenditReq) {
-//            requestObj = JSON.toJSONString(xenditReq);
-//        } else if (req instanceof PayRefundUnifiedReqDTO xenditReq) {
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("reference_id", xenditReq.getOutTradeNo());
-//            params.put("payment_request_id", xenditReq.getChannelOrderNo());
-//            params.put("amount", xenditReq.getRefundPrice() / 100);
-//            params.put("currency", "IDR"); //FIXME 先写死, 后续改为读系统配置.
-//            requestObj = JSON.toJSONString(params);
-//        }
-//
         String requestBody = JSON.toJSONString(req);
 
         // 发送请求
@@ -218,5 +192,25 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         headers.add("idempotency-key", UUID.fastUUID().toString());
 
         return headers;
+    }
+
+    private PayOrderRespDTO convertPayOrderRespDTO(PaymentResponseDTO paymentResponseDTO) {
+        PayOrderRespDTO respDTO = new PayOrderRespDTO();
+        respDTO.setChannelOrderNo(paymentResponseDTO.getId());
+        if (paymentResponseDTO.getActions() != null && !paymentResponseDTO.getActions().isEmpty()) {
+            respDTO.setDisplayMode(PayOrderDisplayModeEnum.IFRAME.getMode());
+            for (PaymentActionDTO action : paymentResponseDTO.getActions()) {
+                if (action.isMobileUrl()) {
+                    return respDTO.setDisplayContent(action.getUrl());
+                }
+                if (action.isWebUrl()) {
+                    return respDTO.setDisplayContent(action.getUrl());
+                }
+                if (action.isDeepLink()) {
+                    return respDTO.setDisplayContent(action.getUrl());
+                }
+            }
+        }
+        return respDTO;
     }
 }
