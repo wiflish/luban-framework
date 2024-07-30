@@ -39,6 +39,9 @@ public class ChannelPropertiesDTO {
     @JSONField(name = "payment_code")
     private String paymentCode;
 
+    @JSONField(name = "cashtag")
+    private String cashTag;
+
     @JSONField(name = "expires_at")
     private String expiresAt;
 

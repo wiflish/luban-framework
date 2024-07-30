@@ -1,13 +1,8 @@
 package com.wiflish.luban.framework.pay.config;
 
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditInvoicePayClient;
-import com.wiflish.luban.framework.pay.core.client.xendit.config.XenditEWalletDANAPayChannelConfig;
-import com.wiflish.luban.framework.pay.core.client.xendit.config.XenditEWalletLinkAjaPayChannelConfig;
-import com.wiflish.luban.framework.pay.core.client.xendit.config.XenditEWalletOVOPayChannelConfig;
-import com.wiflish.luban.framework.pay.core.client.xendit.config.XenditInvoicePayChannelConfig;
-import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.XenditEWalletDANAPayClient;
-import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.XenditEWalletLinkAjaPayClient;
-import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.XenditEWalletOVOPayClient;
+import com.wiflish.luban.framework.pay.core.client.xendit.config.*;
+import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.*;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
@@ -40,5 +35,23 @@ public class XenditPayAutoConfiguration {
     @ConditionalOnClass(XenditEWalletLinkAjaPayClient.class)
     public XenditEWalletLinkAjaPayChannelConfig xenditEWalletLinkAjaPayChannelConfig() {
         return new XenditEWalletLinkAjaPayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(XenditEWalletAstrapayPayClient.class)
+    public XenditEWalletAstrapayPayChannelConfig xenditEWalletAstrapayPayChannelConfig() {
+        return new XenditEWalletAstrapayPayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(XenditEWalletJeniuspayPayClient.class)
+    public XenditEWalletJeniuspayPayChannelConfig xenditEWalletJeniuspayPayChannelConfig() {
+        return new XenditEWalletJeniuspayPayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(XenditEWalletShopeepayPayClient.class)
+    public XenditEWalletShopeepayPayChannelConfig xenditEWalletShopeepayPayChannelConfig() {
+        return new XenditEWalletShopeepayPayChannelConfig();
     }
 }
