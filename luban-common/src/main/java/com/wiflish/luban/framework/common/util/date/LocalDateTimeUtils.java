@@ -4,6 +4,8 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 
@@ -211,5 +213,25 @@ public class LocalDateTimeUtils {
         ZonedDateTime beijingTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Shanghai"));
 
         return beijingTime.toLocalDateTime();
+    }
+
+    /**
+     * 北京时间转化为标准时区
+     *
+     * @param currentDateTime 北京时间
+     * @return gmt时间
+     */
+    public static String beijing2GmtString(LocalDateTime currentDateTime) {
+        if (currentDateTime == null) {
+            return null;
+        }
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, ZoneId.of("Asia/Shanghai"));
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy-MM-dd'T'HH:mm:ss.")
+                .appendValue(ChronoField.MILLI_OF_SECOND, 3)
+                .appendOffset("+HH:mm", "Z")
+                .toFormatter();
+
+        return zonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).format(formatter);
     }
 }

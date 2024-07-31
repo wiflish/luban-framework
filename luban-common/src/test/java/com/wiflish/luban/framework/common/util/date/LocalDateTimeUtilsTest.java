@@ -21,4 +21,12 @@ class LocalDateTimeUtilsTest {
         assertEquals(DateUtil.format(now.withHour(0).withMinute(0).withSecond(0).withNano(0), "yyyy-MM-dd HH:mm:ss"), DateUtil.format(todayRange[0], "yyyy-MM-dd HH:mm:ss"));
         assertEquals(DateUtil.format(now.plusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0), "yyyy-MM-dd HH:mm:ss"), DateUtil.format(todayRange[1], "yyyy-MM-dd HH:mm:ss"));
     }
+
+    @Test
+    void beijing2Gmt() {
+
+        String s = LocalDateTimeUtils.beijing2GmtString(LocalDateTime.now().plusMinutes(40));
+        System.out.println(s);
+
+    }
 }
