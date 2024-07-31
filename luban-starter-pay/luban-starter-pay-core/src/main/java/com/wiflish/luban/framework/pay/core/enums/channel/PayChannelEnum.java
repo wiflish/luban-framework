@@ -100,6 +100,11 @@ public enum PayChannelEnum {
     XENDIT_CARD("xendit_card", "payChannel.name.xenditCard"),
 
     /**
+     * xendit_virtual_account 支付
+     */
+    XENDIT_VA_BCA("xendit_va_bca", "payChannel.name.xenditVABca"),
+
+    /**
      * 模拟支付
      */
     MOCK("mock", "payChannel.name.mock"),

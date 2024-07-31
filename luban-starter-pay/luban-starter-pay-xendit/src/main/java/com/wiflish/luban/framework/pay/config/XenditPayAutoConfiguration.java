@@ -1,13 +1,17 @@
 package com.wiflish.luban.framework.pay.config;
 
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditInvoicePayClient;
+import com.wiflish.luban.framework.pay.core.client.xendit.XenditInvoker;
 import com.wiflish.luban.framework.pay.core.client.xendit.card.XenditCardPayChannelConfig;
 import com.wiflish.luban.framework.pay.core.client.xendit.card.XenditCardPayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.config.*;
 import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.*;
+import com.wiflish.luban.framework.pay.core.client.xendit.va.XenditVABCAPayChannelConfig;
+import com.wiflish.luban.framework.pay.core.client.xendit.va.XenditVABCAPayClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author wiflish
@@ -15,6 +19,11 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration
 public class XenditPayAutoConfiguration {
+    @Bean
+    public XenditInvoker xenditInvoker(RestTemplate restTemplate) {
+        return new XenditInvoker(restTemplate);
+    }
+
     @Bean
     @ConditionalOnClass(XenditInvoicePayClient.class)
     public XenditInvoicePayChannelConfig xenditInvoicePayChannelConfig() {
@@ -61,5 +70,11 @@ public class XenditPayAutoConfiguration {
     @ConditionalOnClass(XenditEWalletShopeepayPayClient.class)
     public XenditEWalletShopeepayPayChannelConfig xenditEWalletShopeepayPayChannelConfig() {
         return new XenditEWalletShopeepayPayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(XenditVABCAPayClient.class)
+    public XenditVABCAPayChannelConfig xenditVABCAPayChannelConfig() {
+        return new XenditVABCAPayChannelConfig();
     }
 }

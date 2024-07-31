@@ -3,9 +3,6 @@ package com.wiflish.luban.framework.pay.core.client.dto.order;
 import com.wiflish.luban.framework.pay.core.client.exception.PayException;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
-import com.wiflish.luban.framework.pay.core.client.exception.PayException;
-import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
-import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -75,6 +72,16 @@ public class PayOrderRespDTO {
      * 调用渠道报错时，错误信息
      */
     private String channelErrorMsg;
+
+    /**
+     * 虚拟账号，仅当支付渠道为虚拟账号时，才会有
+     */
+    private String virtualAccountNumber;
+
+    /**
+     * 虚拟帐户名称，仅当支付渠道为虚拟账号时，才会有
+     */
+    private String virtualAccountName;
 
     public PayOrderRespDTO() {
     }

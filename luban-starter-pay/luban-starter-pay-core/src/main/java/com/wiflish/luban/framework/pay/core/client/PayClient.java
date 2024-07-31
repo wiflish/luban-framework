@@ -2,6 +2,7 @@ package com.wiflish.luban.framework.pay.core.client;
 
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderRespDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderUnifiedReqDTO;
+import com.wiflish.luban.framework.pay.core.client.dto.order.SimulatePayRespDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.refund.PayRefundRespDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.refund.PayRefundUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferRespDTO;
@@ -97,4 +98,14 @@ public interface PayClient {
      * @return 转账信息
      */
     PayTransferRespDTO getTransfer(String outTradeNo, PayTransferTypeEnum type);
+
+    /**
+     * 模拟支付，在虚拟账号等场景使用。
+     *
+     * @param paymentMethodId 支付请求编号
+     * @param amount          支付金额
+     */
+    default SimulatePayRespDTO simulatePayment(String paymentMethodId, Long amount) {
+        return new SimulatePayRespDTO();
+    }
 }
