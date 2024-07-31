@@ -100,9 +100,54 @@ public enum PayChannelEnum {
     XENDIT_CARD("xendit_card", "payChannel.name.xenditCard"),
 
     /**
-     * xendit_virtual_account 支付
+     * xendit_va_bca 支付
      */
     XENDIT_VA_BCA("xendit_va_bca", "payChannel.name.xenditVABca"),
+
+    /**
+     * xendit_va_bsi 支付
+     */
+    XENDIT_VA_BSI("xendit_va_bsi", "payChannel.name.xenditVABsi"),
+
+    /**
+     * xendit_va_bjb 支付
+     */
+    XENDIT_VA_BJB("xendit_va_bjb", "payChannel.name.xenditVABjb"),
+
+    /**
+     * xendit_va_cimb 支付
+     */
+    XENDIT_VA_CIMB("xendit_va_cimb", "payChannel.name.xenditVACimb"),
+
+    /**
+     * xendit_va_sahabat_sampoerna 支付
+     */
+    XENDIT_VA_SAHABAT_SAMPOERNA("xendit_va_sahabat_sampoerna", "payChannel.name.xenditVASahabatSampoerna"),
+
+    /**
+     * xendit_va_artajasa 支付
+     */
+    XENDIT_VA_ARTAJASA("xendit_va_artajasa", "payChannel.name.xenditVAArtajasa"),
+
+    /**
+     * xendit_va_bri 支付
+     */
+    XENDIT_VA_BRI("xendit_va_bri", "payChannel.name.xenditVABri"),
+
+    /**
+     * xendit_va_bni 支付
+     */
+    XENDIT_VA_BNI("xendit_va_bni", "payChannel.name.xenditVABni"),
+
+    /**
+     * xendit_va_mandiri 支付
+     */
+    XENDIT_VA_MANDIRI("xendit_va_mandiri", "payChannel.name.xenditVAMandiri"),
+
+    /**
+     * xendit_va_permata 支付
+     */
+    XENDIT_VA_PERMATA("xendit_va_permata", "payChannel.name.xenditVAPermata"),
 
     /**
      * 模拟支付
