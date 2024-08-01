@@ -3,10 +3,13 @@ package com.wiflish.luban.framework.pay.config;
 import com.wiflish.luban.framework.pay.core.client.PayChannelConfig;
 import com.wiflish.luban.framework.pay.core.client.PayClientFactory;
 import com.wiflish.luban.framework.pay.core.client.impl.PayClientFactoryImpl;
-import com.wiflish.luban.framework.pay.core.client.PayChannelConfig;
+import com.wiflish.luban.framework.pay.core.client.impl.mock.MockPayChannelConfig;
+import com.wiflish.luban.framework.pay.core.client.impl.mock.MockPayClient;
 import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
@@ -26,4 +29,10 @@ public class PayAutoConfiguration {
         return new PayClientFactoryImpl(payChannelConfigs);
     }
 
+    @Bean
+    @Profile(value = {"dev", "test"})
+    @ConditionalOnClass(MockPayClient.class)
+    public MockPayChannelConfig mockPayChannelConfig() {
+        return new MockPayChannelConfig();
+    }
 }
