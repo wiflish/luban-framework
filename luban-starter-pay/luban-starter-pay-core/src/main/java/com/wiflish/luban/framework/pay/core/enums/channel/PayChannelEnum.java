@@ -125,7 +125,7 @@ public enum PayChannelEnum {
     XENDIT_VA_SAHABAT_SAMPOERNA("xendit_va_sahabat_sampoerna", "payChannel.name.xenditVASahabatSampoerna"),
 
     /**
-     * xendit_va_artajasa 支付
+     * xendit_va_artajasa 支付，该银行不支持转账了。
      */
     XENDIT_VA_ARTAJASA("xendit_va_artajasa", "payChannel.name.xenditVAArtajasa"),
 
@@ -148,6 +148,11 @@ public enum PayChannelEnum {
      * xendit_va_permata 支付
      */
     XENDIT_VA_PERMATA("xendit_va_permata", "payChannel.name.xenditVAPermata"),
+
+    /**
+     * xendit_qr_code 支付
+     */
+    XENDIT_QR_CODE("xendit_qr_code", "payChannel.name.xenditVAQrCode"),
 
     /**
      * 模拟支付

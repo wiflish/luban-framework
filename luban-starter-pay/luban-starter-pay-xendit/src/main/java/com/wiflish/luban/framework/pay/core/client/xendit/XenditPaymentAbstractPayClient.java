@@ -188,6 +188,12 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
             respDTO.setVirtualAccountNumber(virtualAccount.getChannelProperties().getVirtualAccountNumber());
             respDTO.setVirtualAccountName(config.getAccountName());
         }
+        //处理QrCode
+        QrCodeDTO qrCode = paymentResponseDTO.getPaymentMethod().getQrCode();
+        if (qrCode != null) {
+            respDTO.setDisplayMode(PayOrderDisplayModeEnum.QR_CODE.getMode());
+            respDTO.setDisplayContent(qrCode.getChannelProperties().getQrString());
+        }
 
         return respDTO;
     }
