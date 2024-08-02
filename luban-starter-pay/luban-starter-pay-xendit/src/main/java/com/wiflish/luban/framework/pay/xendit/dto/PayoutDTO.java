@@ -24,7 +24,7 @@ public class PayoutDTO {
     @JSONField(name = "channel_properties")
     private ChannelPropertiesDTO channelProperties;
     private String currency;
-    private int amount;
+    private Number amount;
     private String description;
     @JSONField(name = "receipt_notification")
     private String receiptNotification;

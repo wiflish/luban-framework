@@ -56,8 +56,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
     }
 
     @Override
-    protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) {
-
+    protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) throws Throwable {
         PaymentRequestDTO requestDTO = new PaymentRequestDTO();
         requestDTO.setCurrency(reqDTO.getCurrency())
                 .setAmount(reqDTO.getPrice() / 100).setReferenceId(reqDTO.getOutTradeNo())

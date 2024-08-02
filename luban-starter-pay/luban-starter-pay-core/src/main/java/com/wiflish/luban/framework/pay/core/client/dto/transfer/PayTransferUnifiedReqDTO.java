@@ -1,18 +1,14 @@
 package com.wiflish.luban.framework.pay.core.client.dto.transfer;
 
-import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
 import com.wiflish.luban.framework.common.validation.InEnum;
+import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.Map;
-
-import static com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum.Alipay;
-import static com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum.WxPay;
 
 /**
  * 统一转账 Request DTO
@@ -48,6 +44,11 @@ public class PayTransferUnifiedReqDTO {
     private Long price;
 
     /**
+     * 货币单位，比如：IDR
+     */
+    private String currency;
+
+    /**
      * 转账标题
      */
     @NotEmpty(message = "转账标题不能为空")
@@ -57,7 +58,6 @@ public class PayTransferUnifiedReqDTO {
     /**
      * 收款人姓名
      */
-    @NotBlank(message = "收款人姓名不能为空", groups = {Alipay.class})
     private String userName;
 
     /**
@@ -73,14 +73,22 @@ public class PayTransferUnifiedReqDTO {
     /**
      * 支付宝登录号
      */
-    @NotBlank(message = "支付宝登录号不能为空", groups = {Alipay.class})
     private String alipayLogonId;
 
     /**
      * 微信 openId
      */
-    @NotBlank(message = "微信 openId 不能为空", groups = {WxPay.class})
     private String openid;
+
+    /**
+     * 支付渠道的转出银行的渠道编码.
+     */
+    private String channelCode;
+
+    /**
+     * 网关渠道编码
+     */
+    private String gatewayChannelCode;
 
     /**
      * 支付渠道的额外参数

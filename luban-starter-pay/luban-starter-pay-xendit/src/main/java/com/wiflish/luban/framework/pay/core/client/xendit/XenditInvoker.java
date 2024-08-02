@@ -1,6 +1,6 @@
 package com.wiflish.luban.framework.pay.core.client.xendit;
 
-import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ReflectUtil;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class XenditInvoker {
      */
     public <Req, Resp> Resp request(String url, HttpMethod httpMethod, String apiKey, Req req, Class<Resp> respClass) {
         // 请求头
-        HttpHeaders headers = getHeaders(apiKey);
+        HttpHeaders headers = getHeaders(apiKey, req);
         String requestBody = JSON.toJSONString(req);
 
         // 发送请求
@@ -48,13 +48,15 @@ public class XenditInvoker {
         return JSON.parseObject(responseEntity.getBody(), respClass);
     }
 
-    private static HttpHeaders getHeaders(String apiKey) {
+    private static <Req> HttpHeaders getHeaders(String apiKey, Req req) {
         HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setBasicAuth(apiKey, "");
-        headers.add("idempotency-key", UUID.fastUUID().toString());
+
+        Object referenceId = ReflectUtil.getFieldValue(req, "referenceId");
+        headers.add("idempotency-key", referenceId.toString());
 
         return headers;
     }

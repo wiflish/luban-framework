@@ -25,4 +25,8 @@ public enum PayoutStatusEnum {
     public static boolean isSuccess(String statusName) {
         return SUCCEEDED.getName().equals(statusName);
     }
+
+    public static boolean isFailure(String statusName) {
+        return FAILED.getName().equals(statusName);
+    }
 }
