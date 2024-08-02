@@ -22,7 +22,7 @@ public class XenditEWalletAstrapayPayClient extends XenditEWalletAbstractPayClie
     @Override
     protected ChannelPropertiesDTO channelProperties(PayOrderUnifiedReqDTO reqDTO) {
         ChannelPropertiesDTO channelProperties = new ChannelPropertiesDTO();
-        channelProperties.setSuccessReturnUrl(reqDTO.getReturnUrl());
+        channelProperties.setSuccessReturnUrl(reqDTO.getReturnUrl()).setFailureReturnUrl(reqDTO.getReturnUrl());
 
         return channelProperties;
     }
