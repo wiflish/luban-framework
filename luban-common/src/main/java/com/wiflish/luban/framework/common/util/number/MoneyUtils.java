@@ -35,6 +35,17 @@ public class MoneyUtils {
     }
 
     /**
+     * 计算百分比金额，四舍五入
+     *
+     * @param price 金额
+     * @param rate  百分比，例如说 56.77% 则传入 5677
+     * @return 百分比金额
+     */
+    public static Long calculateRatePrice(Long price, Integer rate) {
+        return calculateRatePrice(price, rate / 100.00, 0, RoundingMode.HALF_UP).longValue();
+    }
+
+    /**
      * 计算百分比金额，向下传入
      *
      * @param price 金额
