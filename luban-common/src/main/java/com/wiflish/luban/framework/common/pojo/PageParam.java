@@ -33,4 +33,11 @@ public class PageParam implements Serializable {
     @Max(value = 100, message = "每页条数最大值为 100")
     private Integer pageSize = PAGE_SIZE;
 
+    public long getOffset() {
+        long current = getPageNo();
+        if (current <= 1L) {
+            return 0L;
+        }
+        return Math.max((current - 1) * getPageSize(), 0L);
+    }
 }
