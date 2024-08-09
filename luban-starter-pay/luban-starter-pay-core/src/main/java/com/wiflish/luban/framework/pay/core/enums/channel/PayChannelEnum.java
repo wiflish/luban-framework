@@ -165,6 +165,11 @@ public enum PayChannelEnum {
     EZEELINK_E_WALLET_DANA("ezeelink_eWallet_dana", "payChannel.name.ezeelinkEWalletDana"),
 
     /**
+     * ezeelink_eWallet_gopay 支付
+     */
+    EZEELINK_E_WALLET_GOPAY("ezeelink_eWallet_gopay", "payChannel.name.ezeelinkEWalletGopay"),
+
+    /**
      * ezeelink_va_bca 支付
      */
     EZEELINK_VA_BCA("ezeelink_va_bca", "payChannel.name.ezeelinkVABca"),

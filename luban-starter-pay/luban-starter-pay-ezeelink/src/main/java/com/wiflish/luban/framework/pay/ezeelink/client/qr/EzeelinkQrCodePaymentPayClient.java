@@ -24,8 +24,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.EZEELINK_QR_CODE;
-
 /**
  * Ezeelink QrCode 支付
  *
@@ -36,8 +34,8 @@ import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.
 public class EzeelinkQrCodePaymentPayClient extends AbstractPayClient<EzeelinkPayClientConfig> {
     private EzeelinkInvoker ezeelinkInvoker;
 
-    public EzeelinkQrCodePaymentPayClient(Long channelId, EzeelinkPayClientConfig config) {
-        super(channelId, EZEELINK_QR_CODE.getCode(), config);
+    public EzeelinkQrCodePaymentPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

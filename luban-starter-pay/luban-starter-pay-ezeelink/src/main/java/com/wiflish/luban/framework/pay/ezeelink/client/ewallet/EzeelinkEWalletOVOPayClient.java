@@ -28,7 +28,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.Map;
 
 import static com.wiflish.luban.framework.common.exception.enums.GlobalErrorCodeConstants.INVOKER_ERROR;
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.EZEELINK_E_WALLET_OVO;
 
 /**
  * Ezeelink OVO钱包支付
@@ -42,8 +41,8 @@ public class EzeelinkEWalletOVOPayClient extends AbstractPayClient<EzeelinkPayCl
     private static final String lookupAccountApi = "/ezpaygateway/api/v1/ovo/payment/lookupaccount";
     private EzeelinkInvoker ezeelinkInvoker;
 
-    public EzeelinkEWalletOVOPayClient(Long channelId, EzeelinkPayClientConfig config) {
-        super(channelId, EZEELINK_E_WALLET_OVO.getCode(), config);
+    public EzeelinkEWalletOVOPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.wiflish.luban.framework.pay.ezeelink.config;
 
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkInvoker;
-import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.EzeelinkEMoneyPaymentPayClient;
-import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.EzeelinkEWalletDANAPayChannelConfig;
-import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.EzeelinkEWalletOVOPayChannelConfig;
-import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.EzeelinkEWalletOVOPayClient;
+import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.*;
 import com.wiflish.luban.framework.pay.ezeelink.client.qr.EzeelinkQrCodePayChannelConfig;
 import com.wiflish.luban.framework.pay.ezeelink.client.qr.EzeelinkQrCodePaymentPayClient;
 import com.wiflish.luban.framework.pay.ezeelink.client.va.EzeelinkVABCAPayChannelConfig;
@@ -35,6 +32,12 @@ public class EzeelinkPayAutoConfiguration {
     @ConditionalOnClass(EzeelinkEMoneyPaymentPayClient.class)
     public EzeelinkEWalletDANAPayChannelConfig ezeelinkEWalletDANAPayChannelConfig() {
         return new EzeelinkEWalletDANAPayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(EzeelinkEMoneyPaymentPayClient.class)
+    public EzeelinkEWalletGopayPayChannelConfig ezeelinkEWalletGopayPayChannelConfig() {
+        return new EzeelinkEWalletGopayPayChannelConfig();
     }
 
     @Bean

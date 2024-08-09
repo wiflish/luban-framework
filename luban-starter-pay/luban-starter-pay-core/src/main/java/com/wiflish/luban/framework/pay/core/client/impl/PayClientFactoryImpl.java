@@ -82,6 +82,6 @@ public class PayClientFactoryImpl implements PayClientFactory {
                                                                                        Config config) {
         Class<?> payClientClass = clientClass.get(channelCode);
         Assert.notNull(payClientClass, String.format("支付渠道(%s) Class 为空", channelCode));
-        return (AbstractPayClient<Config>) ReflectUtil.newInstance(payClientClass, channelId, config);
+        return (AbstractPayClient<Config>) ReflectUtil.newInstance(payClientClass, channelId, channelCode, config);
     }
 }

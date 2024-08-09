@@ -24,8 +24,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.EZEELINK_E_WALLET_DANA;
-
 /**
  * Ezeelink OVO钱包支付
  *
@@ -36,8 +34,8 @@ import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.
 public class EzeelinkEMoneyPaymentPayClient extends AbstractPayClient<EzeelinkPayClientConfig> {
     private EzeelinkInvoker ezeelinkInvoker;
 
-    public EzeelinkEMoneyPaymentPayClient(Long channelId, EzeelinkPayClientConfig config) {
-        super(channelId, EZEELINK_E_WALLET_DANA.getCode(), config);
+    public EzeelinkEMoneyPaymentPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class EzeelinkEMoneyPaymentPayClient extends AbstractPayClient<EzeelinkPa
                     });
             return convertPayOrderRespDTO(resp);
         } catch (HttpClientErrorException e) {
-            log.error("发起支付调用失败, 渠道: ezeelink, req: {}", JSON.toJSONString(requestDTO), e);
+            log.error("发起支付调用失败, 渠道: ezeelink", e);
             String responseBodyAsString = e.getResponseBodyAsString();
             JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
             PayOrderRespDTO payOrderRespDTO = PayOrderRespDTO.waitingOf(null, null, reqDTO.getOutTradeNo(), responseBodyAsString);

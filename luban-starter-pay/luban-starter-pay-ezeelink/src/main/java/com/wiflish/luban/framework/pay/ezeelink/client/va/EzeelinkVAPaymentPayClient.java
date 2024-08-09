@@ -24,8 +24,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 import java.util.Map;
 
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.EZEELINK_VA_BCA;
-
 /**
  * Ezeelink Virtual Account支付
  * 014 BCA (Bank Central Asia)
@@ -43,8 +41,8 @@ import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.
 public class EzeelinkVAPaymentPayClient extends AbstractPayClient<EzeelinkPayClientConfig> {
     private EzeelinkInvoker ezeelinkInvoker;
 
-    public EzeelinkVAPaymentPayClient(Long channelId, EzeelinkPayClientConfig config) {
-        super(channelId, EZEELINK_VA_BCA.getCode(), config);
+    public EzeelinkVAPaymentPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

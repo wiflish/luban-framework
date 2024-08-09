@@ -1,5 +1,6 @@
 package com.wiflish.luban.framework.pay.ezeelink.util;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.crypto.digest.HMac;
 import cn.hutool.crypto.digest.HmacAlgorithm;
@@ -14,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class SignatureUtil {
     public static String getSignature(HttpMethod httpMethod, String url, String apiSecret, String timestamp, String requestBody) {
         String strToSign = httpMethod.name() + ":" + getRelativeUrl(url) +
-                ":" + DigestUtil.sha256Hex(requestBody).toLowerCase() +
+                ":" + DigestUtil.sha256Hex(StrUtil.removeAll(requestBody, " ")).toLowerCase() +
                 ":" + timestamp;
 
         HMac hmac = DigestUtil.hmac(HmacAlgorithm.HmacSHA256, apiSecret.getBytes(StandardCharsets.UTF_8));
