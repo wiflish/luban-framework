@@ -17,5 +17,6 @@
         <module>luban-starter-pay-xendit</module>
         <module>luban-starter-pay-wechat</module>
         <module>luban-starter-pay-alipay</module>
+        <module>luban-starter-pay-ezeelink</module>
     </modules>
 </project>

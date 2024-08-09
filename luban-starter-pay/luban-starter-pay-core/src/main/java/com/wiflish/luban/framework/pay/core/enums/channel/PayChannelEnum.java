@@ -152,7 +152,27 @@ public enum PayChannelEnum {
     /**
      * xendit_qr_code 支付
      */
-    XENDIT_QR_CODE("xendit_qr_code", "payChannel.name.xenditVAQrCode"),
+    XENDIT_QR_CODE("xendit_qr_code", "payChannel.name.xenditQrCode"),
+
+    /**
+     * ezeelink_eWallet_ovo 支付
+     */
+    EZEELINK_E_WALLET_OVO("ezeelink_eWallet_ovo", "payChannel.name.ezeelinkEWalletOvo"),
+
+    /**
+     * ezeelink_eWallet_dana 支付
+     */
+    EZEELINK_E_WALLET_DANA("ezeelink_eWallet_dana", "payChannel.name.ezeelinkEWalletDana"),
+
+    /**
+     * ezeelink_va_bca 支付
+     */
+    EZEELINK_VA_BCA("ezeelink_va_bca", "payChannel.name.ezeelinkVABca"),
+
+    /**
+     * ezeelink_qr_code 支付
+     */
+    EZEELINK_QR_CODE("ezeelink_qr_code", "payChannel.name.ezeelinkQrCode"),
 
     /**
      * 模拟支付

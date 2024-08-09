@@ -234,4 +234,20 @@ public class LocalDateTimeUtils {
 
         return zonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).format(formatter);
     }
+
+    /**
+     * 北京时间转化为ISO8601
+     *
+     * @param currentDateTime 北京时间
+     * @return gmt时间
+     */
+    public static String beijing2ISO8601(LocalDateTime currentDateTime) {
+        if (currentDateTime == null) {
+            return null;
+        }
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, ZoneId.of("Asia/Shanghai"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+
+        return zonedDateTime.format(formatter);
+    }
 }
