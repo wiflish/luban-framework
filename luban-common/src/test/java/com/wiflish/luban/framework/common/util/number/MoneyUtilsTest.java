@@ -12,7 +12,17 @@ class MoneyUtilsTest {
 
     @Test
     void calculateRatePrice() {
-        Long ratePrice = MoneyUtils.calculateRatePrice(100L, 1);
+
+        Long price = 1999999L;
+        Integer rate = 1152;
+
+        Long ratePrice = MoneyUtils.calculateRatePrice(price, rate, "IDR");
+        assertEquals(230300L, ratePrice);
+
+        ratePrice = MoneyUtils.calculateRatePrice(price, rate, "CNY");
+        assertEquals(23039988L, ratePrice);
+
+        ratePrice = MoneyUtils.calculateRatePrice(100L, 1);
         assertEquals(0, ratePrice);
 
         ratePrice = MoneyUtils.calculateRatePrice(10000L, 1);

@@ -24,6 +24,23 @@ public class MoneyUtils {
     public static final BigDecimal PERCENT_100 = BigDecimal.valueOf(100);
 
     /**
+     * 计算百分比金额，根据货币单位做取舍
+     *
+     * @param price 金额, 单位为分的金额.
+     * @param rate  百分比，例如说 56.77% 则传入 5677
+     * @return 百分比金额
+     */
+    public static Long calculateRatePrice(Long price, Integer rate, String currencyCode) {
+        CurrencyEnum currencyEnum = CurrencyEnum.getByCode(currencyCode);
+        if (currencyEnum.getDecimal() == 0) {
+            long ratePrice = calculateRatePrice(price, rate / 100.00, 0, RoundingMode.DOWN).longValue();
+            // 去掉小数点2位.
+            return ratePrice / 100 * 100;
+        }
+        return calculateRatePrice(price, rate, 0, RoundingMode.HALF_UP).longValue();
+    }
+
+    /**
      * 计算百分比金额，四舍五入
      *
      * @param price 金额
