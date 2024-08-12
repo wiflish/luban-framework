@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
  * @since 2024-07-31
  */
 @Slf4j
-public abstract class XenditVAAbstractPayClient extends XenditPaymentAbstractPayClient {
-    public XenditVAAbstractPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
+public class XenditVAPayClient extends XenditPaymentAbstractPayClient {
+    public XenditVAPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
         super(channelId, channelCode, config);
     }
 

@@ -74,61 +74,61 @@ public class XenditPayAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(XenditVABCAPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVABCAPayChannelConfig xenditVABCAPayChannelConfig() {
         return new XenditVABCAPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVABSIPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVABSIPayChannelConfig xenditVABSIPayChannelConfig() {
         return new XenditVABSIPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVABJBPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVABJBPayChannelConfig xenditVABJBPayChannelConfig() {
         return new XenditVABJBPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVACIMBPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVACIMBPayChannelConfig xenditVACIMBPayChannelConfig() {
         return new XenditVACIMBPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVASAHABATPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVASAHABATPayChannelConfig xenditVASAHABATPayChannelConfig() {
         return new XenditVASAHABATPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVAARTAJASAPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVAARTAJASAPayChannelConfig xenditVAARTAJASAPayChannelConfig() {
         return new XenditVAARTAJASAPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVABRIPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVABRIPayChannelConfig xenditVABRIPayChannelConfig() {
         return new XenditVABRIPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVABNIPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVABNIPayChannelConfig xenditVABNIPayChannelConfig() {
         return new XenditVABNIPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVAMANDIRIPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVAMANDIRIPayChannelConfig xenditVAMANDIRIPayChannelConfig() {
         return new XenditVAMANDIRIPayChannelConfig();
     }
 
     @Bean
-    @ConditionalOnClass(XenditVAPERMATAPayClient.class)
+    @ConditionalOnClass(XenditVAPayClient.class)
     public XenditVAPERMATAPayChannelConfig xenditVAPERMATAPayChannelConfig() {
         return new XenditVAPERMATAPayChannelConfig();
     }

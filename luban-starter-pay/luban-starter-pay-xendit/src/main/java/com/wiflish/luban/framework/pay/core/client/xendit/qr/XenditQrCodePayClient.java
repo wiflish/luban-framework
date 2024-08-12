@@ -3,7 +3,6 @@ package com.wiflish.luban.framework.pay.core.client.xendit.qr;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditPayClientConfig;
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditPaymentAbstractPayClient;
-import com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.ChannelPropertiesDTO;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.PaymentMethodDTO;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.QrCodeDTO;
@@ -16,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class XenditQrCodePayClient extends XenditPaymentAbstractPayClient {
-    public XenditQrCodePayClient(Long channelId, XenditPayClientConfig config) {
-        super(channelId, PayChannelEnum.XENDIT_QR_CODE.getCode(), config);
+    public XenditQrCodePayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

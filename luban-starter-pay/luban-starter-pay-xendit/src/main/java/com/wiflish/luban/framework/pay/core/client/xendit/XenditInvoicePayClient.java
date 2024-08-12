@@ -19,8 +19,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.XENDIT_INVOICE;
-
 /**
  * Xendit支付Client
  *
@@ -32,8 +30,8 @@ public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
     private static final String XENDIT_PAYOUT_URL = "https://api.xendit.co/v2/payouts";
     private XenditClient xenditClient;
 
-    public XenditInvoicePayClient(Long channelId, XenditPayClientConfig config) {
-        super(channelId, XENDIT_INVOICE.getCode(), config);
+    public XenditInvoicePayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

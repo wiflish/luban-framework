@@ -5,7 +5,6 @@ import com.wiflish.luban.framework.pay.core.client.xendit.XenditPayClientConfig;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.ChannelPropertiesDTO;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.XENDIT_E_WALLET_JENIUSPAY;
 import static com.wiflish.luban.framework.pay.xendit.enums.XenditConstant.MOBILE_NUMBER_KEY;
 
 /**
@@ -16,8 +15,8 @@ import static com.wiflish.luban.framework.pay.xendit.enums.XenditConstant.MOBILE
  */
 @Slf4j
 public class XenditEWalletJeniuspayPayClient extends XenditEWalletAbstractPayClient {
-    public XenditEWalletJeniuspayPayClient(Long channelId, XenditPayClientConfig config) {
-        super(channelId, XENDIT_E_WALLET_JENIUSPAY.getCode(), config);
+    public XenditEWalletJeniuspayPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

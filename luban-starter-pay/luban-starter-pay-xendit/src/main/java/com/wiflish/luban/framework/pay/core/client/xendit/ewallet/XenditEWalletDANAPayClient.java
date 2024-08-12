@@ -5,8 +5,6 @@ import com.wiflish.luban.framework.pay.core.client.xendit.XenditPayClientConfig;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.ChannelPropertiesDTO;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.XENDIT_E_WALLET_DANA;
-
 /**
  * Xendit DANA钱包支付
  *
@@ -15,8 +13,8 @@ import static com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum.
  */
 @Slf4j
 public class XenditEWalletDANAPayClient extends XenditEWalletAbstractPayClient {
-    public XenditEWalletDANAPayClient(Long channelId, XenditPayClientConfig config) {
-        super(channelId, XENDIT_E_WALLET_DANA.getCode(), config);
+    public XenditEWalletDANAPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override

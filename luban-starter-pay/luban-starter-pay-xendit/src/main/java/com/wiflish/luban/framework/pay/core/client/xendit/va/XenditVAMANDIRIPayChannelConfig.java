@@ -23,7 +23,7 @@ public class XenditVAMANDIRIPayChannelConfig implements PayChannelConfig {
 
     @Override
     public Class<? extends PayClient> getPayClient() {
-        return XenditVAMANDIRIPayClient.class;
+        return XenditVAPayClient.class;
     }
 
     @Override
