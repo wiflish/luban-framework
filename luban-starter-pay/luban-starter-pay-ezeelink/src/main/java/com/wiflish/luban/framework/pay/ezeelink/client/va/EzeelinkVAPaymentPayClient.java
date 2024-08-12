@@ -80,6 +80,18 @@ public class EzeelinkVAPaymentPayClient extends AbstractPayClient<EzeelinkPayCli
         }
     }
 
+    @Override
+    public PayOrderRespDTO parseVirtualAccountResponseData(String payResponseData) {
+        EzeelinkResp<List<EzeelinkVAResp>> resp = JSON.parseObject(payResponseData, new TypeReference<>() {
+        });
+
+        PayOrderRespDTO payOrderRespDTO = new PayOrderRespDTO();
+        payOrderRespDTO.setVirtualAccountName(resp.getResult().getFirst().getChannelName());
+        payOrderRespDTO.setVirtualAccountNumber(resp.getResult().getFirst().getVaNumber());
+
+        return payOrderRespDTO;
+    }
+
     private String minute2Hour(Integer expireMinutes) {
         return expireMinutes / 60.0 + "";
     }

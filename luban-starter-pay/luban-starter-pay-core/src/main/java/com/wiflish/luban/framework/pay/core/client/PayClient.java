@@ -108,4 +108,8 @@ public interface PayClient {
     default SimulatePayRespDTO simulatePayment(String paymentMethodId, Long amount) {
         return new SimulatePayRespDTO();
     }
+
+    default PayOrderRespDTO parseVirtualAccountResponseData(String payResponseData) {
+        throw new UnsupportedOperationException();
+    }
 }
