@@ -170,14 +170,45 @@ public enum PayChannelEnum {
     EZEELINK_E_WALLET_GOPAY("ezeelink_eWallet_gopay", "payChannel.name.ezeelinkEWalletGopay"),
 
     /**
+     * code:014,
      * ezeelink_va_bca 支付
      */
     EZEELINK_VA_BCA("ezeelink_va_bca", "payChannel.name.ezeelinkVABca"),
 
     /**
+     * code:008,
      * ezeelink_va_mandiri 支付
      */
     EZEELINK_VA_MANDIRI("ezeelink_va_mandiri", "payChannel.name.ezeelinkVAMandiri"),
+
+    /**
+     * code:002,
+     * ezeelink_va_bri 支付
+     */
+    EZEELINK_VA_BRI("ezeelink_va_bri", "payChannel.name.ezeelinkVABri"),
+
+    /**
+     * code:009,
+     * ezeelink_va_bni 支付
+     */
+    EZEELINK_VA_BNI("ezeelink_va_bni", "payChannel.name.ezeelinkVABni"),
+
+    /**
+     * code:451, ezeelink_va_bsi 支付, Bank Syariah Indonesia
+     */
+    EZEELINK_VA_BSI("ezeelink_va_bsi", "payChannel.name.ezeelinkVABsi"),
+
+    /**
+     * code:011,
+     * ezeelink_va_danamon 支付
+     */
+    EZEELINK_VA_DANAMON("ezeelink_va_danamon", "payChannel.name.ezeelinkVADanamon"),
+
+    /**
+     * code:013,
+     * ezeelink_va_permata 支付
+     */
+    EZEELINK_VA_PERMATA("ezeelink_va_permata", "payChannel.name.ezeelinkVAPermata"),
 
     /**
      * ezeelink_qr_code 支付
