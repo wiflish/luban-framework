@@ -24,6 +24,8 @@ public class EzeelinkPayClientConfig implements PayClientConfig {
     private String redirectUrl;
     private String channelCode;
     private Integer expireMinutes;
+    private String storeExtId;
+    private String terminalId;
 
     @Override
     public void validate(Validator validator) {

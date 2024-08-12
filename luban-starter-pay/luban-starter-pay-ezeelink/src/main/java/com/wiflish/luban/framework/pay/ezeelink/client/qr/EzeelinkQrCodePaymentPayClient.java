@@ -50,8 +50,8 @@ public class EzeelinkQrCodePaymentPayClient extends AbstractPayClient<EzeelinkPa
         EzeelinkQrCodeReq requestDTO = new EzeelinkQrCodeReq();
         requestDTO.setExpiryTime(config.getExpireMinutes())
                 .setCurrency(reqDTO.getCurrency())
-                .setStoreExtId("MyShop")
-                .setTerminalId("Mobile")
+                .setStoreExtId(config.getStoreExtId())
+                .setTerminalId(config.getTerminalId())
                 .setBillDescription(buildBillDescription(reqDTO.getSubject()))
                 .setTransactionId(reqDTO.getOutTradeNo())
                 .setAmount((reqDTO.getPrice() / 100) + "")

@@ -23,9 +23,9 @@ public class EzeelinkQrCodeResp extends EzeelinkBaseDTO {
     @JSONField(name = "qr_url")
     private String qrUrl;
     @JSONField(name = "store_name")
-    private Integer storeName;
+    private String storeName;
     @JSONField(name = "store_ext_id")
-    private Integer storeExtId;
+    private String storeExtId;
     @JSONField(name = "terminal_id")
-    private Integer terminalId;
+    private String terminalId;
 }
