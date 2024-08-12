@@ -6,6 +6,8 @@ import com.wiflish.luban.framework.common.api.logger.dto.ApiAccessLogCreateReqDT
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 
+import java.util.List;
+
 /**
  * API 访问日志 Framework Service 实现类
  *
@@ -15,8 +17,8 @@ import org.springframework.scheduling.annotation.Async;
  */
 @RequiredArgsConstructor
 public class ApiAccessLogFrameworkServiceImpl implements ApiAccessLogFrameworkService {
-
     private final ApiAccessLogApi apiAccessLogApi;
+    private final List<String> excludeUrls;
 
     @Override
     @Async
@@ -25,4 +27,11 @@ public class ApiAccessLogFrameworkServiceImpl implements ApiAccessLogFrameworkSe
         apiAccessLogApi.createApiAccessLog(reqDTO);
     }
 
+    @Override
+    public String[] getExcludeUrls() {
+        if (excludeUrls == null) {
+            return new String[0];
+        }
+        return excludeUrls.toArray(new String[0]);
+    }
 }

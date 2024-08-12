@@ -3,6 +3,7 @@ package com.wiflish.luban.framework.apilog.core.filter;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.wiflish.luban.framework.apilog.core.service.ApiAccessLog;
 import com.wiflish.luban.framework.apilog.core.service.ApiAccessLogFrameworkService;
 import com.wiflish.luban.framework.common.exception.enums.GlobalErrorCodeConstants;
@@ -48,6 +49,13 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
             throws ServletException, IOException {
         //不记录管理后台的请求日志.
         if (request.getRequestURI().contains(webProperties.getAdminApi().getPrefix())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        //不记录指定的请求日志.
+        String[] excludes = apiAccessLogFrameworkService.getExcludeUrls();
+        if (StrUtil.containsAny(request.getRequestURI(), excludes)) {
             filterChain.doFilter(request, response);
             return;
         }
