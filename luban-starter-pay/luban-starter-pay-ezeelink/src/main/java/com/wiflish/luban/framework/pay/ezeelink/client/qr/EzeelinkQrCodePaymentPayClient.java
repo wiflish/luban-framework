@@ -24,6 +24,8 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
+import static com.wiflish.luban.framework.pay.ezeelink.util.EzeelinkUtil.buildBillDescription;
+
 /**
  * Ezeelink QrCode 支付
  *
@@ -50,7 +52,7 @@ public class EzeelinkQrCodePaymentPayClient extends AbstractPayClient<EzeelinkPa
                 .setCurrency(reqDTO.getCurrency())
                 .setStoreExtId("MyShop")
                 .setTerminalId("Mobile")
-                .setBillDescription(reqDTO.getSubject())
+                .setBillDescription(buildBillDescription(reqDTO.getSubject()))
                 .setTransactionId(reqDTO.getOutTradeNo())
                 .setAmount((reqDTO.getPrice() / 100) + "")
                 .setPartnerId(config.getPartnerId())

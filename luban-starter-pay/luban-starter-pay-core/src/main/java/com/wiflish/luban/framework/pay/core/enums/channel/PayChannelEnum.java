@@ -175,6 +175,11 @@ public enum PayChannelEnum {
     EZEELINK_VA_BCA("ezeelink_va_bca", "payChannel.name.ezeelinkVABca"),
 
     /**
+     * ezeelink_va_mandiri 支付
+     */
+    EZEELINK_VA_MANDIRI("ezeelink_va_mandiri", "payChannel.name.ezeelinkVAMandiri"),
+
+    /**
      * ezeelink_qr_code 支付
      */
     EZEELINK_QR_CODE("ezeelink_qr_code", "payChannel.name.ezeelinkQrCode"),

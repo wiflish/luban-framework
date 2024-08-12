@@ -3,7 +3,7 @@ package com.wiflish.luban.framework.pay.ezeelink.client;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.wiflish.luban.framework.common.util.date.LocalDateTimeUtils;
-import com.wiflish.luban.framework.pay.ezeelink.util.SignatureUtil;
+import com.wiflish.luban.framework.pay.ezeelink.util.EzeelinkUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -37,7 +37,7 @@ public class EzeelinkInvoker {
         String requestBody = JSON.toJSONString(req);
 
         String timestamp = LocalDateTimeUtils.beijing2ISO8601(LocalDateTime.now());
-        String signature = SignatureUtil.getSignature(httpMethod, url, apiSecret, timestamp, requestBody);
+        String signature = EzeelinkUtil.getSignature(httpMethod, url, apiSecret, timestamp, requestBody);
 
         // 请求头
         HttpHeaders headers = getHeaders(apiKey, signature, timestamp);

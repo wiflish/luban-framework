@@ -24,6 +24,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 import java.util.Map;
 
+import static com.wiflish.luban.framework.pay.ezeelink.util.EzeelinkUtil.buildBillDescription;
+
 /**
  * Ezeelink Virtual Account支付
  * 014 BCA (Bank Central Asia)
@@ -54,7 +56,7 @@ public class EzeelinkVAPaymentPayClient extends AbstractPayClient<EzeelinkPayCli
     protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) throws Throwable {
         EzeelinkVAReq requestDTO = new EzeelinkVAReq();
         requestDTO.setBankCode(config.getChannelCode())
-                .setBillDescription(reqDTO.getSubject())
+                .setBillDescription(buildBillDescription(reqDTO.getSubject()))
                 .setExpirationDuration(minute2Hour(config.getExpireMinutes()))
                 .setTransactionId(reqDTO.getOutTradeNo())
                 .setPartnerId(config.getPartnerId())

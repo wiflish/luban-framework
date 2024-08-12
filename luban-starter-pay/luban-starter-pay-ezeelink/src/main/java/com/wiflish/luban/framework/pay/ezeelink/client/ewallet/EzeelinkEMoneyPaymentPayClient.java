@@ -24,6 +24,8 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Map;
 
+import static com.wiflish.luban.framework.pay.ezeelink.util.EzeelinkUtil.buildBillDescription;
+
 /**
  * Ezeelink OVO钱包支付
  *
@@ -47,7 +49,7 @@ public class EzeelinkEMoneyPaymentPayClient extends AbstractPayClient<EzeelinkPa
     protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) {
         EzeelinkEMoneyReq requestDTO = new EzeelinkEMoneyReq();
         requestDTO.setEmoneyCode(config.getChannelCode())
-                .setBillDescription(reqDTO.getSubject())
+                .setBillDescription(buildBillDescription(reqDTO.getSubject()))
                 .setPartnerReturnLink(reqDTO.getReturnUrl() == null ? config.getRedirectUrl() : reqDTO.getReturnUrl())
                 .setExpirationDuration(config.getExpireMinutes())
                 .setTransactionId(reqDTO.getOutTradeNo())

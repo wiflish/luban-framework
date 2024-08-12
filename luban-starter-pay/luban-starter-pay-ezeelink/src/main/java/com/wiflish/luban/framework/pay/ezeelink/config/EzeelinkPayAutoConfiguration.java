@@ -5,6 +5,7 @@ import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.*;
 import com.wiflish.luban.framework.pay.ezeelink.client.qr.EzeelinkQrCodePayChannelConfig;
 import com.wiflish.luban.framework.pay.ezeelink.client.qr.EzeelinkQrCodePaymentPayClient;
 import com.wiflish.luban.framework.pay.ezeelink.client.va.EzeelinkVABCAPayChannelConfig;
+import com.wiflish.luban.framework.pay.ezeelink.client.va.EzeelinkVAMandiriPayChannelConfig;
 import com.wiflish.luban.framework.pay.ezeelink.client.va.EzeelinkVAPaymentPayClient;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -44,6 +45,12 @@ public class EzeelinkPayAutoConfiguration {
     @ConditionalOnClass(EzeelinkVAPaymentPayClient.class)
     public EzeelinkVABCAPayChannelConfig ezeelinkVABCAPayChannelConfig() {
         return new EzeelinkVABCAPayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(EzeelinkVAPaymentPayClient.class)
+    public EzeelinkVAMandiriPayChannelConfig ezeelinkVAMandiriPayChannelConfig() {
+        return new EzeelinkVAMandiriPayChannelConfig();
     }
 
     @Bean
