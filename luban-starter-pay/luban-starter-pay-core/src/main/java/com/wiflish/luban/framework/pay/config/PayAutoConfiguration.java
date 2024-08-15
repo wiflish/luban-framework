@@ -8,6 +8,8 @@ import com.wiflish.luban.framework.pay.core.client.impl.mock.MockPayClient;
 import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
@@ -20,6 +22,8 @@ import java.util.List;
  * @since 2024-07-22
  */
 @AutoConfiguration
+@ConditionalOnProperty(prefix = "luban.framework.pay", value = "enable", matchIfMissing = true)
+@EnableConfigurationProperties(PayProperties.class)
 public class PayAutoConfiguration {
     @Resource
     private List<PayChannelConfig> payChannelConfigs;

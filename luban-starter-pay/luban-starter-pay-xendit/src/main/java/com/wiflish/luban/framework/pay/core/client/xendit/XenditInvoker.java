@@ -37,10 +37,10 @@ public class XenditInvoker {
         String requestBody = JSON.toJSONString(req);
 
         // 发送请求
-        log.debug("[xenditRequest][请求参数({})]", requestBody);
+        log.info("[xenditRequest][请求参数({})]", requestBody);
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, httpMethod, requestEntity, String.class);
-        log.debug("[xenditRequest][响应结果({})]", responseEntity);
+        log.info("[xenditRequest][响应结果({})]", responseEntity);
         // 处理响应
         if (!responseEntity.getStatusCode().is2xxSuccessful()) {
             throw exception(INVOKER_ERROR);
@@ -56,7 +56,9 @@ public class XenditInvoker {
         headers.setBasicAuth(apiKey, "");
 
         Object referenceId = ReflectUtil.getFieldValue(req, "referenceId");
-        headers.add("idempotency-key", referenceId.toString());
+        if (referenceId != null) {
+            headers.add("idempotency-key", referenceId.toString());
+        }
 
         return headers;
     }

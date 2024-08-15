@@ -80,7 +80,7 @@ public class EzeelinkEWalletOVOPayClient extends AbstractPayClient<EzeelinkPayCl
         // 进行支付
         EzeelinkResp<EzeelinkOVOResp> resp = null;
         try {
-            requestDTO.setCashAmount((reqDTO.getPrice() / 100) + "").setTransactionCode(reqDTO.getOutTradeNo());
+            requestDTO.setCashAmount(getActualPayAmount(reqDTO.getPrice()) + "").setTransactionCode(reqDTO.getOutTradeNo());
             resp = ezeelinkInvoker.request(config.getBaseUrl() + config.getApiUrl(), HttpMethod.POST, config.getApiKey(), config.getApiSecret(), requestDTO, new TypeReference<>() {
             });
 

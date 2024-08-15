@@ -1,5 +1,8 @@
 package com.wiflish.luban.framework.pay.core.client;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.wiflish.luban.framework.common.util.number.MoneyUtils;
+import com.wiflish.luban.framework.pay.config.PayProperties;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderRespDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.order.SimulatePayRespDTO;
@@ -24,6 +27,17 @@ public interface PayClient {
      * @return 渠道编号
      */
     Long getId();
+
+    /**
+     * 获得实际支付金额，处理金额的小数位.
+     *
+     * @param amount 支付金额
+     * @return 实际支付金额
+     */
+    default Number getActualPayAmount(Long amount) {
+        PayProperties payProperties = SpringUtil.getBean(PayProperties.class);
+        return MoneyUtils.calculatePrice(amount, payProperties.getCurrencyCode());
+    }
 
     PayClientConfig getConfig();
 

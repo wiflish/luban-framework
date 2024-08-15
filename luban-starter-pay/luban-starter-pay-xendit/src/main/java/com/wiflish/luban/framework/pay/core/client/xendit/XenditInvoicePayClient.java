@@ -44,7 +44,7 @@ public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
     protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) throws Throwable {
         Map<String, Object> params = new HashMap<>();
         params.put("external_id", reqDTO.getOutTradeNo());
-        params.put("amount", reqDTO.getPrice() / 100);
+        params.put("amount", getActualPayAmount(reqDTO.getPrice()));
         params.put("currency", reqDTO.getCurrency());
         params.put("description", reqDTO.getSubject());
 
@@ -78,7 +78,7 @@ public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
         channelProperties.setAccountHolderName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount());
 
         payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getGatewayChannelCode()).setChannelProperties(channelProperties)
-                .setAmount(reqDTO.getPrice() / 100).setCurrency(reqDTO.getCurrency());
+                .setAmount(getActualPayAmount(reqDTO.getPrice())).setCurrency(reqDTO.getCurrency());
         try {
             payoutRespDTO = xenditInvoker.request(XENDIT_PAYOUT_URL, HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
         } catch (HttpClientErrorException e) {

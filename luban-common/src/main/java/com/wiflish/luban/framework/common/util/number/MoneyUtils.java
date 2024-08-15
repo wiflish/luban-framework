@@ -33,11 +33,26 @@ public class MoneyUtils {
     public static Long calculateRatePrice(Long price, Integer rate, String currencyCode) {
         CurrencyEnum currencyEnum = CurrencyEnum.getByCode(currencyCode);
         if (currencyEnum.getDecimal() == 0) {
-            long ratePrice = calculateRatePrice(price, rate / 100.00, 0, RoundingMode.DOWN).longValue();
-            // 去掉小数点2位.
-            return ratePrice / 100 * 100;
+            return calculateRatePrice(price, rate / 100.00, 0, RoundingMode.DOWN).longValue();
         }
-        return calculateRatePrice(price, rate, 0, RoundingMode.HALF_UP).longValue();
+        // 有小数点
+        return calculateRatePrice(price / 100, rate, 0, RoundingMode.HALF_UP).longValue();
+    }
+
+    /**
+     * 根据货币单位计算金额
+     *
+     * @param price        金额
+     * @param currencyCode 货币单位
+     * @return 实际金额
+     */
+    public static Number calculatePrice(Long price, String currencyCode) {
+        CurrencyEnum currencyEnum = CurrencyEnum.getByCode(currencyCode);
+        // 货币无小数点
+        if (currencyEnum.getDecimal() == 0) {
+            return price;
+        }
+        return price / 100.00;
     }
 
     /**

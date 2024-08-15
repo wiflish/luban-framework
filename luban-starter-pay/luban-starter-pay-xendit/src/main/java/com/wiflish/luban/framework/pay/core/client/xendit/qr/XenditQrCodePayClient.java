@@ -25,7 +25,7 @@ public class XenditQrCodePayClient extends XenditPaymentAbstractPayClient {
 
         QrCodeDTO qrCodeDTO = new QrCodeDTO();
         qrCodeDTO.setChannelCode(config.getChannelCode())
-                .setCurrency(reqDTO.getCurrency()).setAmount(reqDTO.getPrice() / 100)
+                .setCurrency(reqDTO.getCurrency()).setAmount(getActualPayAmount(reqDTO.getPrice()))
                 .setChannelProperties(channelProperties(reqDTO));
 
         paymentMethod.setReferenceId(reqDTO.getOutTradeNo())

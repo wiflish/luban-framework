@@ -59,7 +59,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
     protected PayOrderRespDTO doUnifiedOrder(PayOrderUnifiedReqDTO reqDTO) throws Throwable {
         PaymentRequestDTO requestDTO = new PaymentRequestDTO();
         requestDTO.setCurrency(reqDTO.getCurrency())
-                .setAmount(reqDTO.getPrice() / 100).setReferenceId(reqDTO.getOutTradeNo())
+                .setAmount(getActualPayAmount(reqDTO.getPrice())).setReferenceId(reqDTO.getOutTradeNo())
                 .setPaymentMethod(getPaymentMethod(reqDTO))
                 .setChannelPropertiesDTO(channelProperties(reqDTO));
 
@@ -117,7 +117,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         PaymentRefundDTO paymentRefundDTO = null;
         PaymentRefundReqDTO refundReqDTO = new PaymentRefundReqDTO();
         refundReqDTO.setReferenceId(reqDTO.getOutRefundNo()).setPaymentRequestId(reqDTO.getChannelOrderNo())
-                .setAmount(reqDTO.getRefundPrice() / 100).setCurrency(reqDTO.getCurrency())
+                .setAmount(getActualPayAmount(reqDTO.getRefundPrice())).setCurrency(reqDTO.getCurrency())
                 .setMetadata(new HashMap<>());
         try {
             paymentRefundDTO = xenditInvoker.request(XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), refundReqDTO, PaymentRefundDTO.class);
@@ -158,7 +158,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         String url = String.format(simulateVirtualAccountUrlTmp, paymentMethodId);
 
         Map<String, Object> objMap = new HashMap<>();
-        objMap.put("amount", amount / 100);
+        objMap.put("amount", getActualPayAmount(amount));
 
         return xenditInvoker.request(url, HttpMethod.POST, config.getApiKey(), objMap, SimulatePayRespDTO.class);
     }

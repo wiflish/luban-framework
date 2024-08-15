@@ -60,7 +60,7 @@ public class EzeelinkVAPaymentPayClient extends AbstractPayClient<EzeelinkPayCli
                 .setExpirationDuration(minute2Hour(config.getExpireMinutes()))
                 .setTransactionId(reqDTO.getOutTradeNo())
                 .setPartnerId(config.getPartnerId())
-                .setAmount((reqDTO.getPrice() / 100) + "")
+                .setAmount(getActualPayAmount(reqDTO.getPrice()) + "")
                 .setSubPartnerId(config.getSubPartnerId());
 
         EzeelinkResp<List<EzeelinkVAResp>> resp = null;

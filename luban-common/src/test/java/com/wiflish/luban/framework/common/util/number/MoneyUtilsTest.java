@@ -34,4 +34,12 @@ class MoneyUtilsTest {
         ratePrice = MoneyUtils.calculateRatePrice(1000L, 125);
         assertEquals(13, ratePrice);
     }
+
+    @Test
+    void calculatePrice() {
+        Long price = 1999999L;
+        assertEquals(1999999L, MoneyUtils.calculatePrice(price, "IDR"));
+        assertEquals(19999.99, MoneyUtils.calculatePrice(price, "CNY"));
+
+    }
 }

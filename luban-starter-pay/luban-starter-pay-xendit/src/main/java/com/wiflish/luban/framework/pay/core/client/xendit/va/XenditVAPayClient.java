@@ -45,7 +45,7 @@ public class XenditVAPayClient extends XenditPaymentAbstractPayClient {
 
         VirtualAccountDTO virtualAccountDTO = new VirtualAccountDTO();
         virtualAccountDTO.setChannelCode(config.getChannelCode())
-                .setCurrency(reqDTO.getCurrency()).setAmount(reqDTO.getPrice() / 100)
+                .setCurrency(reqDTO.getCurrency()).setAmount(getActualPayAmount(reqDTO.getPrice()))
                 .setChannelProperties(channelProperties(reqDTO));
 
         paymentMethod.setReferenceId(reqDTO.getOutTradeNo())

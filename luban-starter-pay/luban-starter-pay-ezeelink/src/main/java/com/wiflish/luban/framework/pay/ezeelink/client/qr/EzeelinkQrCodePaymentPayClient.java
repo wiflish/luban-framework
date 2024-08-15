@@ -54,7 +54,7 @@ public class EzeelinkQrCodePaymentPayClient extends AbstractPayClient<EzeelinkPa
                 .setTerminalId(config.getTerminalId())
                 .setBillDescription(buildBillDescription(reqDTO.getSubject()))
                 .setTransactionId(reqDTO.getOutTradeNo())
-                .setAmount((reqDTO.getPrice() / 100) + "")
+                .setAmount(getActualPayAmount(reqDTO.getPrice()) + "")
                 .setPartnerId(config.getPartnerId())
                 .setSubPartnerId(config.getSubPartnerId());
 

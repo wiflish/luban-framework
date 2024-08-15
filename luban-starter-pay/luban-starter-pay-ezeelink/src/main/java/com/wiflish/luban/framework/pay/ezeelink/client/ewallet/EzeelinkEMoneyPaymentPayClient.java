@@ -53,7 +53,7 @@ public class EzeelinkEMoneyPaymentPayClient extends AbstractPayClient<EzeelinkPa
                 .setPartnerReturnLink(reqDTO.getReturnUrl() == null ? config.getRedirectUrl() : reqDTO.getReturnUrl())
                 .setExpirationDuration(config.getExpireMinutes())
                 .setTransactionId(reqDTO.getOutTradeNo())
-                .setAmount((reqDTO.getPrice() / 100) + "")
+                .setAmount(getActualPayAmount(reqDTO.getPrice()) + "")
                 .setPartnerId(config.getPartnerId())
                 .setSubPartnerId(config.getSubPartnerId());
 
