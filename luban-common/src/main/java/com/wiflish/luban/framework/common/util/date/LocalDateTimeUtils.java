@@ -250,4 +250,8 @@ public class LocalDateTimeUtils {
 
         return zonedDateTime.format(formatter);
     }
+
+    public static LocalDateTime getNow() {
+        return LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+    }
 }

@@ -168,4 +168,21 @@ public class MoneyUtils {
         return price.multiply(percent).divide(PERCENT_100, PRICE_SCALE, RoundingMode.HALF_UP);
     }
 
+    /**
+     * 计算优惠金额，优惠金额不能超过总金额，也不能超过最大优惠金额
+     *
+     * @param totalPrice         总金额
+     * @param discountPrice      折扣金额
+     * @param discountLimitPrice 折扣最大优惠
+     * @return 优惠金额
+     */
+    public static Long calculateDiscountPrice(Long totalPrice, Long discountPrice, Long discountLimitPrice) {
+        // 优惠金额不能超过总金额
+        long min = Math.min(totalPrice, discountPrice);
+        // 有优惠最大限额时，不能超过最大限额
+        if (discountLimitPrice != null && discountLimitPrice > 0) {
+            return Math.min(min, discountLimitPrice);
+        }
+        return min;
+    }
 }

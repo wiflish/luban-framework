@@ -35,4 +35,9 @@ class LocalDateTimeUtilsTest {
         String s = LocalDateTimeUtils.beijing2ISO8601(LocalDateTime.now());
         System.out.println(s);
     }
+
+    @Test
+    void getNow() {
+        System.out.println(LocalDateTimeUtils.getNow());
+    }
 }
