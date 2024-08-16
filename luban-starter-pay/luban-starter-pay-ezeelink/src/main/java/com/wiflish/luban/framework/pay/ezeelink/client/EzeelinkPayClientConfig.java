@@ -4,8 +4,6 @@ import com.wiflish.luban.framework.pay.core.client.PayClientConfig;
 import jakarta.validation.Validator;
 import lombok.Data;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-
 /**
  * Ezeelink 的 PayClientConfig
  *
@@ -29,12 +27,5 @@ public class EzeelinkPayClientConfig implements PayClientConfig {
 
     @Override
     public void validate(Validator validator) {
-        assertNotNull(baseUrl, "baseUrl 不能为空");
-        assertNotNull(apiUrl, "apiUrl 不能为空");
-        assertNotNull(apiKey, "apiKey 不能为空");
-        assertNotNull(apiSecret, "apiSecret 不能为空");
-        assertNotNull(partnerId, "partnerId 不能为空");
-        assertNotNull(subPartnerId, "subPartnerId 不能为空");
-        assertNotNull(redirectUrl, "redirectUrl 不能为空");
     }
 }
