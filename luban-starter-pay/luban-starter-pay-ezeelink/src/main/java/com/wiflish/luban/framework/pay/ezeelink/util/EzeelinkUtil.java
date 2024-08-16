@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 public class EzeelinkUtil {
     public static String getSignature(HttpMethod httpMethod, String url, String apiSecret, String timestamp, String requestBody) {
         String strToSign = httpMethod.name() + ":" + getRelativeUrl(url) +
-                ":" + DigestUtil.sha256Hex(StrUtil.removeAll(requestBody, " ")).toLowerCase() +
+                ":" + DigestUtil.sha256Hex(buildRequestBody(requestBody)).toLowerCase() +
                 ":" + timestamp;
 
         HMac hmac = DigestUtil.hmac(HmacAlgorithm.HmacSHA256, apiSecret.getBytes(StandardCharsets.UTF_8));
@@ -34,6 +34,16 @@ public class EzeelinkUtil {
             return subject;
         }
         return subject.substring(0, 10);
+    }
+
+    public static String buildRequestBody(String requestBody) {
+        // 移除所有空格.
+        String body = StrUtil.removeAll(requestBody, " ");
+        body = StrUtil.removeAll(body, "\\\n");
+        body = StrUtil.removeAll(body, "\\\t");
+        body = StrUtil.removeAll(body, "\\\r");
+
+        return body;
     }
 
     public static String getRelativeUrl(String url) {
