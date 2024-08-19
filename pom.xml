@@ -93,6 +93,7 @@
         <xercesImpl.version>2.12.2</xercesImpl.version>
         <weixin-java.version>4.6.0</weixin-java.version>
         <xendit-java.version>1.23.0</xendit-java.version>
+        <libphonenumber.version>8.13.43</libphonenumber.version>
     </properties>
     <build>
         <plugins>
@@ -637,6 +638,11 @@
                 <groupId>com.xendit</groupId>
                 <artifactId>xendit-java-lib</artifactId>
                 <version>${xendit-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.libphonenumber</groupId>
+                <artifactId>libphonenumber</artifactId>
+                <version>${libphonenumber.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

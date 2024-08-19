@@ -37,6 +37,7 @@ public interface GlobalErrorCodeConstants {
     ErrorCode RECORD_NOT_FOUND = new ErrorCode(902, "Record Not Found.");
     ErrorCode DUPLICATE_KEY_ERROR = new ErrorCode(903, "Duplicate Key Error."); // 唯一键重复
     ErrorCode QUERY_DATE_RANG_ERROR = new ErrorCode(904, "The query date range cannot exceed {0} days.");
+    ErrorCode PHONE_VALIDATE_ERROR = new ErrorCode(905, "The phone validated failure.");
 
     ErrorCode INVOKER_ERROR = new ErrorCode(980, "Invoker error, Please try again later");
 

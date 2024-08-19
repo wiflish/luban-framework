@@ -20,7 +20,9 @@ import java.lang.annotation.*;
 )
 public @interface Mobile {
 
-    String message() default "手机号格式不正确";
+    String message() default "The phone number format is incorrect";
+
+    String statCode() default "";
 
     Class<?>[] groups() default {};
 
