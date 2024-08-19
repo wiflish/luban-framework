@@ -68,7 +68,8 @@ public class PayClientFactoryImpl implements PayClientFactory {
     public <Config extends PayClientConfig> void createOrUpdatePayClient(Long channelId, String channelCode,
                                                                          Config config) {
         AbstractPayClient<Config> client = (AbstractPayClient<Config>) clients.get(channelId);
-        if (client == null) {
+        // 如果客户端不存在，或者配置类不相同，则创建新的客户端
+        if (client == null || !client.getConfig().getClass().getName().equals(config.getClass().getName())) {
             client = this.createPayClient(channelId, channelCode, config);
             client.init();
             clients.put(client.getId(), client);
