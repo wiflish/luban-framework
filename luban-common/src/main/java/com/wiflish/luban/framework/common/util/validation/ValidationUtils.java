@@ -2,8 +2,10 @@ package com.wiflish.luban.framework.common.util.validation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.wiflish.luban.framework.common.util.string.PhoneEnum;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
@@ -27,6 +29,9 @@ public class ValidationUtils {
 
     public static boolean isMobile(String mobile, String statCode) {
         try {
+            if (StrUtil.isEmpty(statCode)) {
+                statCode = PhoneEnum.ID.getStateCode();
+            }
             PhoneNumberUtil instance = PhoneNumberUtil.getInstance();
             return instance.isValidNumber(instance.parse(mobile, statCode));
         } catch (NumberParseException e) {
