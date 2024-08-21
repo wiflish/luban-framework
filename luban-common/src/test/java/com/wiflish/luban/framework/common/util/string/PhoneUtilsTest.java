@@ -25,4 +25,15 @@ class PhoneUtilsTest {
         assertEquals("6281234567890", PhoneUtils.addExternalPhonePrefix("081234567890", "62"));
         assertEquals("6281234567890", PhoneUtils.addExternalPhonePrefix("81234567890", "62"));
     }
+
+    @Test
+    void addInternalPhonePrefix() {
+        assertEquals("081234567890", PhoneUtils.addInternalPhonePrefix("+62 81234567890", "62"));
+        assertEquals("081234567890", PhoneUtils.addInternalPhonePrefix("+6281234567890", "62"));
+        assertEquals("081234567890", PhoneUtils.addInternalPhonePrefix("+081234567890", "62"));
+        assertEquals("081234567890", PhoneUtils.addInternalPhonePrefix("081234567890", "62"));
+        assertEquals("081234567890", PhoneUtils.addInternalPhonePrefix("81234567890", "62"));
+        assertEquals("81234567890", PhoneUtils.addInternalPhonePrefix("81234567890", "86"));
+        assertEquals("081234567890", PhoneUtils.addInternalPhonePrefix("081234567890", "86"));
+    }
 }

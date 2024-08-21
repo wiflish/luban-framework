@@ -75,4 +75,9 @@ public class PayRefundUnifiedReqDTO {
      * 货币单位
      */
     private String currency;
+
+    /**
+     * 支付手机号
+     */
+    private String mobile;
 }

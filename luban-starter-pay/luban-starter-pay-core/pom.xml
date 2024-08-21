@@ -16,6 +16,10 @@
             <groupId>com.wiflish.luban</groupId>
             <artifactId>luban-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.wiflish.luban</groupId>
+            <artifactId>luban-starter-i18n</artifactId>
+        </dependency>
 
         <!-- Spring 核心 -->
         <dependency>

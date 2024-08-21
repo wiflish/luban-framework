@@ -14,9 +14,4 @@ public class PayProperties {
      * 是否开启
      */
     private Boolean enable = true;
-
-    /**
-     * 货币编码
-     */
-    private String currencyCode = "CNY";
 }

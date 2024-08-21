@@ -50,6 +50,24 @@ public class PhoneUtils {
         return externalPhonePrefix.getExternalPhonePrefix() + phone;
     }
 
+    public static String addInternalPhonePrefix(String phone, String countryCode) {
+        if (StrUtil.isEmpty(phone) || StrUtil.isEmpty(countryCode)) {
+            return phone;
+        }
+        if (phone.indexOf("+") == 0) {
+            phone = phone.substring(1);
+        }
+        if (phone.indexOf(countryCode) == 0) {
+            phone = phone.substring(countryCode.length());
+        }
+        phone = phone.trim();
+        PhoneEnum phonePrefix = PhoneEnum.getByExternalPhonePrefix(countryCode);
+        if (phone.indexOf(phonePrefix.getInternalPhonePrefix()) == 0) {
+            return phone;
+        }
+        return phonePrefix.getInternalPhonePrefix() + phone;
+    }
+
     public static void validatePhone(String phone, String statCode) {
         // 如果是印尼手机号，强制0开头.
         PhoneEnum byStateCode = PhoneEnum.getByStateCode(statCode);

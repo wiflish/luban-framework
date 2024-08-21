@@ -37,4 +37,9 @@ public class I18nProperties {
      * 国家编码
      */
     private String stateCode = "CN";
+
+    /**
+     * 国际电话前缀
+     */
+    private String statePhonePrefix = "86";
 }
