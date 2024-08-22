@@ -113,7 +113,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         requestDTO.setReferenceId(outTradeNo);
 
         try {
-            PaymentGetResponseDTO paymentResponseDTO = xenditInvoker.request(XENDIT_PAYMENT_REQUEST_URL, HttpMethod.GET, config.getApiKey(), requestDTO, PaymentGetResponseDTO.class);
+            PaymentGetResponseDTO paymentResponseDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_PAYMENT_REQUEST_URL, HttpMethod.GET, config.getApiKey(), requestDTO, PaymentGetResponseDTO.class);
             return convertPayOrderRespDTO(paymentResponseDTO.getData().getFirst());
         } catch (HttpClientErrorException e) {
             log.error("发起支付调用失败, 渠道: xendit, req: {}", JSON.toJSONString(requestDTO), e);
