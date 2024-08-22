@@ -40,9 +40,9 @@ import static cn.hutool.core.date.DatePattern.NORM_DATETIME_FORMATTER;
  */
 @Slf4j
 public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<XenditPayClientConfig> {
-    private static final String XENDIT_PAYMENT_REQUEST_URL = "https://api.xendit.co/payment_requests";
-    private static final String XENDIT_REFUND_URL = "https://api.xendit.co/refunds";
-    private static final String simulateVirtualAccountUrlTmp = "https://api.xendit.co/v2/payment_methods/%s/payments/simulate";
+    private static final String XENDIT_PAYMENT_REQUEST_URL = "/payment_requests";
+    private static final String XENDIT_REFUND_URL = "/refunds";
+    private static final String simulateVirtualAccountUrlTmp = "/v2/payment_methods/%s/payments/simulate";
 
     protected XenditInvoker xenditInvoker;
 
@@ -65,7 +65,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
         PaymentResponseDTO paymentResponseDTO = null;
         try {
-            paymentResponseDTO = xenditInvoker.request(XENDIT_PAYMENT_REQUEST_URL, HttpMethod.POST, config.getApiKey(), requestDTO, PaymentResponseDTO.class);
+            paymentResponseDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_PAYMENT_REQUEST_URL, HttpMethod.POST, config.getApiKey(), requestDTO, PaymentResponseDTO.class);
 
             return convertPayOrderRespDTO(paymentResponseDTO);
         } catch (HttpClientErrorException e) {
@@ -109,7 +109,21 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     protected PayOrderRespDTO doGetOrder(String outTradeNo) {
-        return null;
+        PaymentRequestDTO requestDTO = new PaymentRequestDTO();
+        requestDTO.setReferenceId(outTradeNo);
+
+        try {
+            PaymentGetResponseDTO paymentResponseDTO = xenditInvoker.request(XENDIT_PAYMENT_REQUEST_URL, HttpMethod.GET, config.getApiKey(), requestDTO, PaymentGetResponseDTO.class);
+            return convertPayOrderRespDTO(paymentResponseDTO.getData().getFirst());
+        } catch (HttpClientErrorException e) {
+            log.error("发起支付调用失败, 渠道: xendit, req: {}", JSON.toJSONString(requestDTO), e);
+            String responseBodyAsString = e.getResponseBodyAsString();
+            JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
+            PayOrderRespDTO payOrderRespDTO = PayOrderRespDTO.waitingOf(null, null, outTradeNo, responseBodyAsString);
+            payOrderRespDTO.setChannelErrorCode(jsonObject.getString("error_code")).setChannelErrorMsg(jsonObject.getString("message"));
+
+            return payOrderRespDTO;
+        }
     }
 
     @Override
@@ -120,7 +134,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
                 .setAmount(getActualPayAmount(reqDTO.getRefundPrice())).setCurrency(reqDTO.getCurrency())
                 .setMetadata(new HashMap<>());
         try {
-            paymentRefundDTO = xenditInvoker.request(XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), refundReqDTO, PaymentRefundDTO.class);
+            paymentRefundDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), refundReqDTO, PaymentRefundDTO.class);
         } catch (HttpClientErrorException e) {
             log.error("发起退款调用失败, 渠道: xenditPayment , req: {}, resp: {}", JSON.toJSONString(refundReqDTO), JSON.toJSONString(paymentRefundDTO), e);
             String responseBodyAsString = e.getResponseBodyAsString();
@@ -155,7 +169,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     public SimulatePayRespDTO simulatePayment(String paymentMethodId, Long amount) {
-        String url = String.format(simulateVirtualAccountUrlTmp, paymentMethodId);
+        String url = String.format(config.getBaseUrl() + simulateVirtualAccountUrlTmp, paymentMethodId);
 
         Map<String, Object> objMap = new HashMap<>();
         objMap.put("amount", getActualPayAmount(amount));

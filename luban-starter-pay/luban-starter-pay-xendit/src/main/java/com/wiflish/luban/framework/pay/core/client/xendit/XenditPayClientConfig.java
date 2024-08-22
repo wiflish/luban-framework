@@ -15,6 +15,7 @@ public class XenditPayClientConfig implements PayClientConfig {
     private String apiKey;
     private String callbackToken;
     private String channelCode;
+    private String baseUrl;
     private String successUrl;
     private String accountName;
     private Long expireMinutes;

@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Slf4j
 public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
-    private static final String XENDIT_PAYOUT_URL = "https://api.xendit.co/v2/payouts";
+    private static final String XENDIT_PAYOUT_URL = "/v2/payouts";
     private XenditClient xenditClient;
 
     public XenditInvoicePayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
@@ -80,7 +80,7 @@ public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
         payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getGatewayChannelCode()).setChannelProperties(channelProperties)
                 .setAmount(getActualPayAmount(reqDTO.getPrice())).setCurrency(reqDTO.getCurrency());
         try {
-            payoutRespDTO = xenditInvoker.request(XENDIT_PAYOUT_URL, HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
+            payoutRespDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_PAYOUT_URL, HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
         } catch (HttpClientErrorException e) {
             log.error("发起转账调用失败, 渠道: xenditInvoice.payout , req: {}, resp: {}", JSON.toJSONString(payoutReqDTO), JSON.toJSONString(payoutRespDTO), e);
             String responseBodyAsString = e.getResponseBodyAsString();
