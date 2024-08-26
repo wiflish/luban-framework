@@ -23,6 +23,11 @@ public class WebProperties {
     @NotNull(message = "Admin UI 不能为空")
     private Ui adminUi;
 
+    /**
+     * 心跳检查返回的结果字符串，比如："OK"
+     */
+    private String ping = "OK";
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

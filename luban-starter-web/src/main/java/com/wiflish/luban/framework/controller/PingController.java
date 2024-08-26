@@ -1,5 +1,7 @@
 package com.wiflish.luban.framework.controller;
 
+import com.wiflish.luban.framework.web.config.WebProperties;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class PingController {
+    @Resource
+    private WebProperties webProperties;
+
     /**
      * 心跳检查.
      *
@@ -16,6 +21,6 @@ public class PingController {
      */
     @RequestMapping("/ping")
     public String ping() {
-        return "0";
+        return webProperties.getPing();
     }
 }
