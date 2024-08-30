@@ -78,4 +78,11 @@ public class PhoneUtils {
             }
         }
     }
+
+    public static String hidePhone(String phone) {
+        if (phone == null || phone.length() <= 5) {
+            return "*****";
+        }
+        return StrUtil.hide(phone, 3, phone.length() - 2);
+    }
 }
