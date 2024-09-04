@@ -8,10 +8,7 @@ import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferRespD
 import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
 import com.wiflish.luban.framework.pay.core.client.impl.NonePayClientConfig;
-import com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
-import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
-import com.wiflish.luban.framework.pay.core.client.impl.NonePayClientConfig;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -27,8 +24,8 @@ public class MockPayClient extends AbstractPayClient<NonePayClientConfig> {
 
     private static final String MOCK_RESP_SUCCESS_DATA = "MOCK_SUCCESS";
 
-    public MockPayClient(Long channelId, NonePayClientConfig config) {
-        super(channelId, PayChannelEnum.MOCK.getCode(), config);
+    public MockPayClient(Long channelId, String channelCode, NonePayClientConfig config) {
+        super(channelId, channelCode, config);
     }
 
     @Override
