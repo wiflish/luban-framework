@@ -7,6 +7,7 @@ import com.wiflish.luban.framework.common.util.json.JsonUtils;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -21,6 +22,7 @@ import java.util.Map;
  *
  * @author wiflish
  */
+@Slf4j
 public class ServletUtils {
 
     /**
@@ -48,6 +50,24 @@ public class ServletUtils {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         // 输出附件
         IoUtil.write(response.getOutputStream(), false, content);
+    }
+
+    /**
+     * 返回流。
+     *
+     * @param response  httpResponse
+     * @param mediaType 媒体类型
+     * @param content   流
+     */
+    public static void writeByType(HttpServletResponse response, String mediaType, byte[] content) {
+        // 设置 header 和 contentType
+        response.setContentType(mediaType);
+        // 输出附件
+        try {
+            IoUtil.write(response.getOutputStream(), true, content);
+        } catch (IOException e) {
+            log.warn("把流写入到response中失败，{}", e.getMessage());
+        }
     }
 
     /**
