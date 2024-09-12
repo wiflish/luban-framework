@@ -47,12 +47,34 @@ public class MoneyUtils {
      * @return 实际金额
      */
     public static Number calculatePrice(Long price, String currencyCode) {
+        if (price == null) {
+            return null;
+        }
         CurrencyEnum currencyEnum = CurrencyEnum.getByCode(currencyCode);
         // 货币无小数点
         if (currencyEnum.getDecimal() == 0) {
             return price;
         }
         return price / 100.00;
+    }
+
+    /**
+     * 根据货币单位把元变成分
+     *
+     * @param price        以元为单位的金额
+     * @param currencyCode 货币单位
+     * @return 转化后的金额
+     */
+    public static Long calculatePrice(Integer price, String currencyCode) {
+        if (price == null) {
+            return null;
+        }
+        CurrencyEnum currencyEnum = CurrencyEnum.getByCode(currencyCode);
+        // 货币无小数点, 表示元为最小单位.
+        if (currencyEnum.getDecimal() == 0) {
+            return price.longValue();
+        }
+        return price.longValue() * 100;
     }
 
     /**
