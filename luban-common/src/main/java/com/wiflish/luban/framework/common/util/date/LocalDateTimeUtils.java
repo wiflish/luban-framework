@@ -1,6 +1,7 @@
 package com.wiflish.luban.framework.common.util.date;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -209,6 +210,9 @@ public class LocalDateTimeUtils {
      * @return 北京时间
      */
     public static LocalDateTime gmt2Beijing(String gmtTime) {
+        if (StrUtil.isEmpty(gmtTime)) {
+            return null;
+        }
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(gmtTime, DateTimeFormatter.ISO_DATE_TIME);
         ZonedDateTime beijingTime = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Shanghai"));
 
