@@ -32,6 +32,18 @@ public class PaymentRefundDTO {
     @JSONField(name = "status")
     private String status;
 
+    /**
+     * Xendit管理后台系统操作退款会有此字段.
+     */
+    @JSONField(name = "void_status")
+    private String voidStatus;
+
+    /**
+     * Xendit管理后台系统操作退款会有此字段.
+     */
+    @JSONField(name = "voided_at")
+    private String voidedAt;
+
     @JSONField(name = "reason")
     private String reason;
 
