@@ -18,6 +18,7 @@ import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
+import com.wiflish.luban.framework.pay.xendit.dto.PayoutDTO;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import static cn.hutool.core.date.DatePattern.NORM_DATETIME_FORMATTER;
+import static com.wiflish.luban.framework.pay.xendit.enums.XenditApiEnum.*;
 
 /**
  * Xendit payment支付，统一的API.
@@ -40,10 +42,6 @@ import static cn.hutool.core.date.DatePattern.NORM_DATETIME_FORMATTER;
  */
 @Slf4j
 public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<XenditPayClientConfig> {
-    private static final String XENDIT_PAYMENT_REQUEST_URL = "/payment_requests";
-    private static final String XENDIT_REFUND_URL = "/refunds";
-    private static final String simulateVirtualAccountUrlTmp = "/v2/payment_methods/%s/payments/simulate";
-
     protected XenditInvoker xenditInvoker;
 
     public XenditPaymentAbstractPayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
@@ -65,7 +63,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
         PaymentResponseDTO paymentResponseDTO = null;
         try {
-            paymentResponseDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_PAYMENT_REQUEST_URL, HttpMethod.POST, config.getApiKey(), requestDTO, PaymentResponseDTO.class);
+            paymentResponseDTO = xenditInvoker.request(config.getBaseUrl() + PAYMENT_REQUEST_API.getApi(), HttpMethod.POST, config.getApiKey(), requestDTO, PaymentResponseDTO.class);
 
             return convertPayOrderRespDTO(paymentResponseDTO);
         } catch (HttpClientErrorException e) {
@@ -113,7 +111,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
         requestDTO.setReferenceId(outTradeNo);
 
         try {
-            PaymentGetResponseDTO paymentResponseDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_PAYMENT_REQUEST_URL, HttpMethod.GET, config.getApiKey(), requestDTO, PaymentGetResponseDTO.class);
+            PaymentGetResponseDTO paymentResponseDTO = xenditInvoker.request(config.getBaseUrl() + PAYMENT_REQUEST_API.getApi(), HttpMethod.GET, config.getApiKey(), requestDTO, PaymentGetResponseDTO.class);
             return convertPayOrderRespDTO(paymentResponseDTO.getData().getFirst());
         } catch (HttpClientErrorException e) {
             log.error("发起支付调用失败, 渠道: xendit, req: {}", JSON.toJSONString(requestDTO), e);
@@ -134,7 +132,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
                 .setAmount(getActualPayAmount(reqDTO.getRefundPrice())).setCurrency(reqDTO.getCurrency())
                 .setMetadata(new HashMap<>());
         try {
-            paymentRefundDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_REFUND_URL, HttpMethod.POST, config.getApiKey(), refundReqDTO, PaymentRefundDTO.class);
+            paymentRefundDTO = xenditInvoker.request(config.getBaseUrl() + REFUND_API.getApi(), HttpMethod.POST, config.getApiKey(), refundReqDTO, PaymentRefundDTO.class);
         } catch (HttpClientErrorException e) {
             log.error("发起退款调用失败, 渠道: xenditPayment , req: {}, resp: {}", JSON.toJSONString(refundReqDTO), JSON.toJSONString(paymentRefundDTO), e);
             String responseBodyAsString = e.getResponseBodyAsString();
@@ -159,7 +157,25 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     protected PayTransferRespDTO doUnifiedTransfer(PayTransferUnifiedReqDTO reqDTO) throws Throwable {
-        return null;
+        PayoutDTO payoutRespDTO = new PayoutDTO();
+        PayoutDTO payoutReqDTO = new PayoutDTO();
+        ChannelPropertiesDTO channelProperties = new ChannelPropertiesDTO();
+        channelProperties.setAccountHolderName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount());
+
+        payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getGatewayChannelCode()).setChannelProperties(channelProperties)
+                .setAmount(getActualPayAmount(reqDTO.getPrice())).setCurrency(reqDTO.getCurrency());
+        try {
+            payoutRespDTO = xenditInvoker.request(config.getBaseUrl() + PAYOUT_API.getApi(), HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
+        } catch (HttpClientErrorException e) {
+            log.error("发起转账调用失败, 渠道: xenditInvoice.payout , req: {}, resp: {}", JSON.toJSONString(payoutReqDTO), JSON.toJSONString(payoutRespDTO), e);
+            String responseBodyAsString = e.getResponseBodyAsString();
+            JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
+            PayTransferRespDTO payTransferRespDTO = PayTransferRespDTO.waitingOf(null, reqDTO.getOutTransferNo(), responseBodyAsString);
+            payTransferRespDTO.setChannelErrorCode(jsonObject.getString("error_code")).setChannelErrorMsg(jsonObject.getString("message"));
+            return payTransferRespDTO;
+        }
+
+        return PayTransferRespDTO.dealingOf(payoutRespDTO.getId(), reqDTO.getOutTransferNo(), payoutRespDTO);
     }
 
     @Override
@@ -169,7 +185,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     public SimulatePayRespDTO simulatePayment(String paymentMethodId, Long amount) {
-        String url = String.format(config.getBaseUrl() + simulateVirtualAccountUrlTmp, paymentMethodId);
+        String url = String.format(config.getBaseUrl() + SIMULATE_VA_TEMPLATE_API.getApi(), paymentMethodId);
 
         Map<String, Object> objMap = new HashMap<>();
         objMap.put("amount", getActualPayAmount(amount));

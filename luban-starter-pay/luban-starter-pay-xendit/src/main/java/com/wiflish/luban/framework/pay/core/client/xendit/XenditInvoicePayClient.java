@@ -19,6 +19,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.wiflish.luban.framework.pay.xendit.enums.XenditApiEnum.PAYOUT_API;
+
 /**
  * Xendit支付Client
  *
@@ -27,7 +29,6 @@ import java.util.Map;
  */
 @Slf4j
 public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
-    private static final String XENDIT_PAYOUT_URL = "/v2/payouts";
     private XenditClient xenditClient;
 
     public XenditInvoicePayClient(Long channelId, String channelCode, XenditPayClientConfig config) {
@@ -80,7 +81,7 @@ public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
         payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getGatewayChannelCode()).setChannelProperties(channelProperties)
                 .setAmount(getActualPayAmount(reqDTO.getPrice())).setCurrency(reqDTO.getCurrency());
         try {
-            payoutRespDTO = xenditInvoker.request(config.getBaseUrl() + XENDIT_PAYOUT_URL, HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
+            payoutRespDTO = xenditInvoker.request(config.getBaseUrl() + PAYOUT_API.getApi(), HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
         } catch (HttpClientErrorException e) {
             log.error("发起转账调用失败, 渠道: xenditInvoice.payout , req: {}, resp: {}", JSON.toJSONString(payoutReqDTO), JSON.toJSONString(payoutRespDTO), e);
             String responseBodyAsString = e.getResponseBodyAsString();
