@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Data
 public class PayTransferRespDTO {
 
+    private Long transferId;
+
     /**
      * 转账状态
      *
