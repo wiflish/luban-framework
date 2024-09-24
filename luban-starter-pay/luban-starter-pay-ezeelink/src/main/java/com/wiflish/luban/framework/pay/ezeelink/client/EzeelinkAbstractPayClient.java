@@ -20,7 +20,7 @@ import static com.wiflish.luban.framework.pay.ezeelink.enums.EzeelinkApiEnum.PAY
 
 @Slf4j
 public abstract class EzeelinkAbstractPayClient extends AbstractPayClient<EzeelinkPayClientConfig> {
-    private EzeelinkInvoker ezeelinkInvoker;
+    protected EzeelinkInvoker ezeelinkInvoker;
 
     public EzeelinkAbstractPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
         super(channelId, channelCode, config);
@@ -48,7 +48,7 @@ public abstract class EzeelinkAbstractPayClient extends AbstractPayClient<Ezeeli
 
             return PayTransferRespDTO.waitingOf(resp.getResult().getTransactionCode(), reqDTO.getOutTransferNo(), resp);
         } catch (HttpClientErrorException e) {
-            log.error("发起退款调用失败, 渠道: ezeelink , req: {} ", JSON.toJSONString(transReq), e);
+            log.error("发起转账调用失败, 渠道: ezeelink , req: {} ", JSON.toJSONString(transReq), e);
             String responseBodyAsString = e.getResponseBodyAsString();
             JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
 

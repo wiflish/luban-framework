@@ -15,7 +15,6 @@ import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferRespD
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkAbstractPayClient;
-import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkInvoker;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkPayClientConfig;
 import com.wiflish.luban.framework.pay.ezeelink.dto.*;
 import com.wiflish.luban.framework.pay.ezeelink.enums.EzeelinkOVOLookupAccountStatusEnum;
@@ -37,7 +36,6 @@ import static com.wiflish.luban.framework.pay.ezeelink.enums.EzeelinkApiEnum.*;
  */
 @Slf4j
 public class EzeelinkEWalletOVOPayClient extends EzeelinkAbstractPayClient {
-    private EzeelinkInvoker ezeelinkInvoker;
     private I18nProperties i18nProperties;
 
     public EzeelinkEWalletOVOPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
@@ -46,7 +44,7 @@ public class EzeelinkEWalletOVOPayClient extends EzeelinkAbstractPayClient {
 
     @Override
     protected void doInit() {
-        ezeelinkInvoker = SpringUtil.getBean(EzeelinkInvoker.class);
+        super.doInit();
         i18nProperties = SpringUtil.getBean(I18nProperties.class);
     }
 

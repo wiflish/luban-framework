@@ -1,6 +1,5 @@
 package com.wiflish.luban.framework.pay.ezeelink.client.qr;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
@@ -12,7 +11,6 @@ import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferRespD
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkAbstractPayClient;
-import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkInvoker;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkPayClientConfig;
 import com.wiflish.luban.framework.pay.ezeelink.dto.EzeelinkQrCodeReq;
 import com.wiflish.luban.framework.pay.ezeelink.dto.EzeelinkQrCodeResp;
@@ -33,15 +31,8 @@ import static com.wiflish.luban.framework.pay.ezeelink.util.EzeelinkUtil.buildBi
  */
 @Slf4j
 public class EzeelinkQrCodePaymentPayClient extends EzeelinkAbstractPayClient {
-    private EzeelinkInvoker ezeelinkInvoker;
-
     public EzeelinkQrCodePaymentPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
         super(channelId, channelCode, config);
-    }
-
-    @Override
-    protected void doInit() {
-        ezeelinkInvoker = SpringUtil.getBean(EzeelinkInvoker.class);
     }
 
     @Override
