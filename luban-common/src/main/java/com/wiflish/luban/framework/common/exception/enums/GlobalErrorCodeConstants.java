@@ -18,7 +18,7 @@ public interface GlobalErrorCodeConstants {
 
     // ========== 客户端错误段 ==========
 
-    ErrorCode BAD_REQUEST = new ErrorCode(400, "Request Parameters Error.");
+    ErrorCode BAD_REQUEST = new ErrorCode(400, "Request Parameters Error.{0}");
     ErrorCode UNAUTHORIZED = new ErrorCode(401, "Account is not Login.");
     ErrorCode FORBIDDEN = new ErrorCode(403, "No Permission.");
     ErrorCode NOT_FOUND = new ErrorCode(404, "Not Found");

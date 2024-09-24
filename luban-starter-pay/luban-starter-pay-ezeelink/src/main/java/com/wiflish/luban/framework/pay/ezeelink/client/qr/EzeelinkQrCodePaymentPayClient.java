@@ -9,10 +9,9 @@ import com.wiflish.luban.framework.pay.core.client.dto.order.PayOrderUnifiedReqD
 import com.wiflish.luban.framework.pay.core.client.dto.refund.PayRefundRespDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.refund.PayRefundUnifiedReqDTO;
 import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferRespDTO;
-import com.wiflish.luban.framework.pay.core.client.dto.transfer.PayTransferUnifiedReqDTO;
-import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
+import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkAbstractPayClient;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkInvoker;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkPayClientConfig;
 import com.wiflish.luban.framework.pay.ezeelink.dto.EzeelinkQrCodeReq;
@@ -33,7 +32,7 @@ import static com.wiflish.luban.framework.pay.ezeelink.util.EzeelinkUtil.buildBi
  * @since 2024-08-08
  */
 @Slf4j
-public class EzeelinkQrCodePaymentPayClient extends AbstractPayClient<EzeelinkPayClientConfig> {
+public class EzeelinkQrCodePaymentPayClient extends EzeelinkAbstractPayClient {
     private EzeelinkInvoker ezeelinkInvoker;
 
     public EzeelinkQrCodePaymentPayClient(Long channelId, String channelCode, EzeelinkPayClientConfig config) {
@@ -108,11 +107,6 @@ public class EzeelinkQrCodePaymentPayClient extends AbstractPayClient<EzeelinkPa
 
     @Override
     protected PayRefundRespDTO doGetRefund(String outTradeNo, String outRefundNo) throws Throwable {
-        return null;
-    }
-
-    @Override
-    protected PayTransferRespDTO doUnifiedTransfer(PayTransferUnifiedReqDTO reqDTO) throws Throwable {
         return null;
     }
 
