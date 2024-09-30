@@ -19,5 +19,9 @@ public class EzeelinkBankDTO {
     private String accountName;
     @JSONField(name = "partner_trans_id")
     private String partnerTransId;
+    @JSONField(name = "transaction_code")
+    private String transactionCode;
+    private String status;
+    private String message;
 
 }
