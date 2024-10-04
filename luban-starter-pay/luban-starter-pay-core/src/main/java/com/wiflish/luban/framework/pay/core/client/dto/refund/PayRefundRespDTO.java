@@ -59,7 +59,7 @@ public class PayRefundRespDTO {
      */
     private String channelErrorMsg;
 
-    private PayRefundRespDTO() {
+    public PayRefundRespDTO() {
     }
 
     /**

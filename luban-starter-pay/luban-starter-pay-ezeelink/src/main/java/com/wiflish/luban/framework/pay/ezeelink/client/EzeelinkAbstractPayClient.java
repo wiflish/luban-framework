@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.wiflish.luban.framework.pay.ezeelink.enums.EzeelinkApiEnum.PAYMENT_API_MANUALTRANSFER;
@@ -34,7 +35,8 @@ public abstract class EzeelinkAbstractPayClient extends AbstractPayClient<Ezeeli
     @Override
     protected PayTransferRespDTO doUnifiedTransfer(PayTransferUnifiedReqDTO reqDTO) throws Throwable {
         EzeelinkBankDTO bankDTO = new EzeelinkBankDTO();
-        bankDTO.setBankCode(reqDTO.getBankName()).setAccountName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount())
+        bankDTO.setBankCode(config.getBankCode());
+        bankDTO.setAccountName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount())
                 .setTransferAmount(String.valueOf(reqDTO.getPrice()))
                 .setPartnerTransId(reqDTO.getOutTransferNo());
 
@@ -46,7 +48,16 @@ public abstract class EzeelinkAbstractPayClient extends AbstractPayClient<Ezeeli
             EzeelinkResp<EzeelinkBankTransferDTO> resp = ezeelinkInvoker.request(config.getBaseUrl() + PAYMENT_API_MANUALTRANSFER.getApi(), HttpMethod.POST, config.getApiKey(), config.getApiSecret(), transReq, new TypeReference<>() {
             });
 
-            return PayTransferRespDTO.waitingOf(resp.getResult().getTransactionCode(), reqDTO.getOutTransferNo(), resp);
+            // 处理返回结果
+            log.info("发起转账调用成功, 渠道: ezeelink , resp: {} ", JSON.toJSONString(resp));
+            EzeelinkBankDTO result = resp.getResult().getAccounts().getFirst();
+            if (result.getStatus().equals("Success")) {
+                return PayTransferRespDTO.successOf(result.getTransactionCode(), LocalDateTime.now(), result.getPartnerTransId(), resp);
+            }else if(result.getStatus().equals("Failed")){
+                return PayTransferRespDTO.closedOf(result.getStatus(), result.getMessage(),result.getPartnerTransId(), resp);
+            }else {
+                return PayTransferRespDTO.dealingOf(result.getTransactionCode(), result.getPartnerTransId(), resp);
+            }
         } catch (HttpClientErrorException e) {
             log.error("发起转账调用失败, 渠道: ezeelink , req: {} ", JSON.toJSONString(transReq), e);
             String responseBodyAsString = e.getResponseBodyAsString();
