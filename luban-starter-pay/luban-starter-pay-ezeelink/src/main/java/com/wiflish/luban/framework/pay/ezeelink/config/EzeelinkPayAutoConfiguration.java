@@ -1,7 +1,9 @@
 package com.wiflish.luban.framework.pay.ezeelink.config;
 
+import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkAbstractPayClient;
 import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkInvoker;
 import com.wiflish.luban.framework.pay.ezeelink.client.ewallet.*;
+import com.wiflish.luban.framework.pay.ezeelink.client.payout.EzeelinkPayoutPayChannelConfig;
 import com.wiflish.luban.framework.pay.ezeelink.client.qr.EzeelinkQrCodePayChannelConfig;
 import com.wiflish.luban.framework.pay.ezeelink.client.qr.EzeelinkQrCodePaymentPayClient;
 import com.wiflish.luban.framework.pay.ezeelink.client.va.*;
@@ -85,5 +87,11 @@ public class EzeelinkPayAutoConfiguration {
     @ConditionalOnClass(EzeelinkQrCodePaymentPayClient.class)
     public EzeelinkQrCodePayChannelConfig ezeelinkQrCodePayChannelConfig() {
         return new EzeelinkQrCodePayChannelConfig();
+    }
+
+    @Bean
+    @ConditionalOnClass(EzeelinkAbstractPayClient.class)
+    public EzeelinkPayoutPayChannelConfig ezeelinkPayoutPayChannelConfig() {
+        return new EzeelinkPayoutPayChannelConfig();
     }
 }
