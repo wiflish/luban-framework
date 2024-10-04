@@ -216,6 +216,11 @@ public enum PayChannelEnum {
     EZEELINK_QR_CODE("ezeelink_qr_code", "payChannel.name.ezeelinkQrCode"),
 
     /**
+     * ezeelink_payout_bank 支付
+     */
+    EZEELINK_PAYOUT_BANK("ezeelink_payout_bank", "payChannel.name.ezeelinkPayoutBank"),
+
+    /**
      * 模拟支付
      */
     MOCK("mock", "payChannel.name.mock"),
