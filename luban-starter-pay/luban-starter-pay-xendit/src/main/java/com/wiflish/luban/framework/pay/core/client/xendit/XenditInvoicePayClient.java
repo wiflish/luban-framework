@@ -78,7 +78,7 @@ public class XenditInvoicePayClient extends XenditPaymentAbstractPayClient {
         ChannelPropertiesDTO channelProperties = new ChannelPropertiesDTO();
         channelProperties.setAccountHolderName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount());
 
-        payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getGatewayChannelCode()).setChannelProperties(channelProperties)
+        payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getChannelCode()).setChannelProperties(channelProperties)
                 .setAmount(getActualPayAmount(reqDTO.getPrice())).setCurrency(reqDTO.getCurrency());
         try {
             payoutRespDTO = xenditInvoker.request(config.getBaseUrl() + PAYOUT_API.getApi(), HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
