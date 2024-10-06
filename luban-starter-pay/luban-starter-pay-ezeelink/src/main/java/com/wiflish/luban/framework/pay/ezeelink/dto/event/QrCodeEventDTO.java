@@ -12,4 +12,7 @@ import lombok.Data;
 public class QrCodeEventDTO extends EzeelinkQrCodeResp {
     @JSONField(name = "initialization_qris")
     private Integer initializationQris;
+
+    @JSONField(name = "reference_number")
+    private String referenceNumber;
 }
