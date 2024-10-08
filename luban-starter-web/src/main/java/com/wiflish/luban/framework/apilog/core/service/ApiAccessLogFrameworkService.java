@@ -15,4 +15,6 @@ public interface ApiAccessLogFrameworkService {
     void createApiAccessLog(ApiAccessLog apiAccessLog);
 
     String[] getExcludeUrls();
+
+    String[] getIncludeUrlPrefixs();
 }

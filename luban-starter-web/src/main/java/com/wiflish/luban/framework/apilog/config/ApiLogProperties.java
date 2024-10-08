@@ -14,4 +14,5 @@ import java.util.List;
 public class ApiLogProperties {
     private Boolean enable = true;
     private List<String> excludeUrls = List.of();
+    private List<String> includeUrlPrefixs = List.of();
 }
