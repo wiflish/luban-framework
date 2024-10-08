@@ -19,6 +19,7 @@ import java.util.List;
 public class ApiAccessLogFrameworkServiceImpl implements ApiAccessLogFrameworkService {
     private final ApiAccessLogApi apiAccessLogApi;
     private final List<String> excludeUrls;
+    private final List<String> includeUrlPrefixs;
 
     @Override
     @Async
@@ -33,5 +34,13 @@ public class ApiAccessLogFrameworkServiceImpl implements ApiAccessLogFrameworkSe
             return new String[0];
         }
         return excludeUrls.toArray(new String[0]);
+    }
+
+    @Override
+    public String[] getIncludeUrlPrefixs() {
+        if (includeUrlPrefixs == null) {
+            return new String[0];
+        }
+        return includeUrlPrefixs.toArray(new String[0]);
     }
 }

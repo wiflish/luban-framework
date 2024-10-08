@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Bean;
 public class ApiLogAutoConfiguration {
     @Bean
     public ApiAccessLogFrameworkService apiAccessLogFrameworkService(ApiAccessLogApi apiAccessLogApi, ApiLogProperties apiLogProperties) {
-        return new ApiAccessLogFrameworkServiceImpl(apiAccessLogApi, apiLogProperties.getExcludeUrls());
+        return new ApiAccessLogFrameworkServiceImpl(apiAccessLogApi, apiLogProperties.getExcludeUrls(), apiLogProperties.getIncludeUrlPrefixs());
     }
 
     @Bean
