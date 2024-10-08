@@ -138,4 +138,11 @@ public class XenditPayAutoConfiguration {
     public XenditQrCodePayChannelConfig xenditQrCodePayChannelConfig() {
         return new XenditQrCodePayChannelConfig();
     }
+
+    @Bean
+    @ConditionalOnClass(XenditPayoutBankPayChannelConfig.class)
+    public XenditPayoutBankPayChannelConfig xenditPayoutBankPayChannelConfig() {
+        return new XenditPayoutBankPayChannelConfig();
+    }
+
 }
