@@ -6,6 +6,8 @@ import com.wiflish.luban.framework.pay.core.client.xendit.card.XenditCardPayChan
 import com.wiflish.luban.framework.pay.core.client.xendit.card.XenditCardPayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.config.*;
 import com.wiflish.luban.framework.pay.core.client.xendit.ewallet.*;
+import com.wiflish.luban.framework.pay.core.client.xendit.payout.XenditPayoutBankPayChannelConfig;
+import com.wiflish.luban.framework.pay.core.client.xendit.payout.XenditPayoutBankPayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.qr.XenditQrCodePayChannelConfig;
 import com.wiflish.luban.framework.pay.core.client.xendit.qr.XenditQrCodePayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.va.*;
@@ -140,7 +142,7 @@ public class XenditPayAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(XenditPayoutBankPayChannelConfig.class)
+    @ConditionalOnClass(XenditPayoutBankPayClient.class)
     public XenditPayoutBankPayChannelConfig xenditPayoutBankPayChannelConfig() {
         return new XenditPayoutBankPayChannelConfig();
     }

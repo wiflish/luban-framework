@@ -1,9 +1,8 @@
-package com.wiflish.luban.framework.pay.core.client.xendit.config;
+package com.wiflish.luban.framework.pay.core.client.xendit.payout;
 
 import com.wiflish.luban.framework.pay.core.client.PayChannelConfig;
 import com.wiflish.luban.framework.pay.core.client.PayClient;
 import com.wiflish.luban.framework.pay.core.client.PayClientConfig;
-import com.wiflish.luban.framework.pay.core.client.xendit.XenditInvoicePayClient;
 import com.wiflish.luban.framework.pay.core.client.xendit.XenditPayClientConfig;
 import com.wiflish.luban.framework.pay.core.enums.channel.PayChannelEnum;
 
@@ -24,7 +23,7 @@ public class XenditPayoutBankPayChannelConfig implements PayChannelConfig {
 
     @Override
     public Class<? extends PayClient> getPayClient() {
-        return XenditInvoicePayClient.class;
+        return XenditPayoutBankPayClient.class;
     }
 
     @Override
