@@ -221,6 +221,11 @@ public enum PayChannelEnum {
     EZEELINK_PAYOUT_BANK("ezeelink_payout_bank", "payChannel.name.ezeelinkPayoutBank"),
 
     /**
+     * xendit_payout_bank 支付
+     */
+    XENDIT_PAYOUT_BANK("xendit_payout_bank", "payChannel.name.xenditPayoutBank"),
+
+    /**
      * 模拟支付
      */
     MOCK("mock", "payChannel.name.mock"),
