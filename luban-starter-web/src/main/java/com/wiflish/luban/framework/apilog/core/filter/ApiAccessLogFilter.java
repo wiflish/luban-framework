@@ -48,10 +48,10 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         //不记录管理后台的请求日志.
-        if (request.getRequestURI().contains(webProperties.getAdminApi().getPrefix())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if (request.getRequestURI().contains(webProperties.getAdminApi().getPrefix())) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
         //不记录指定的请求日志.
         String[] excludes = apiAccessLogFrameworkService.getExcludeUrls();
