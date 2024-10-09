@@ -10,6 +10,7 @@ import com.wiflish.luban.framework.pay.ezeelink.client.EzeelinkPayClientConfig;
 import com.wiflish.luban.framework.pay.ezeelink.dto.EzeelinkBankDTO;
 import com.wiflish.luban.framework.pay.ezeelink.dto.EzeelinkBankTransferDTO;
 import com.wiflish.luban.framework.pay.ezeelink.dto.EzeelinkResp;
+import com.wiflish.luban.framework.pay.ezeelink.enums.EzeelinkApiEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.HttpClientErrorException;
@@ -32,7 +33,8 @@ public class EzeelinkPayoutBankPayClient extends EzeelinkAbstractPayClient {
     @Override
     protected PayTransferRespDTO doUnifiedTransfer(PayTransferUnifiedReqDTO reqDTO) throws Throwable {
         EzeelinkBankDTO bankDTO = new EzeelinkBankDTO();
-        bankDTO.setBankCode(reqDTO.getChannelCode())
+        bankDTO.setBankCode(config.getPayoutChannelCode())
+
                 .setAccountName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount())
                 .setTransferAmount(String.valueOf(reqDTO.getPrice()))
                 .setPartnerTransId(reqDTO.getOutTransferNo());
@@ -42,7 +44,7 @@ public class EzeelinkPayoutBankPayClient extends EzeelinkAbstractPayClient {
 
         // 发起转账
         try {
-            EzeelinkResp<EzeelinkBankTransferDTO> resp = ezeelinkInvoker.request(config.getBaseUrl() + config.getApiUrl(), HttpMethod.POST, config.getApiKey(), config.getApiSecret(), transReq, new TypeReference<>() {
+            EzeelinkResp<EzeelinkBankTransferDTO> resp = ezeelinkInvoker.request(config.getBaseUrl() + EzeelinkApiEnum.PAYMENT_API_MANUALTRANSFER.getApi(), HttpMethod.POST, config.getApiKey(), config.getApiSecret(), transReq, new TypeReference<>() {
             });
 
             // 处理返回结果

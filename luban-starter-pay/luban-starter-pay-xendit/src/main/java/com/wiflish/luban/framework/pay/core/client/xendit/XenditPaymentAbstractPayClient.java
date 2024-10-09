@@ -18,7 +18,6 @@ import com.wiflish.luban.framework.pay.core.client.impl.AbstractPayClient;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderDisplayModeEnum;
 import com.wiflish.luban.framework.pay.core.enums.order.PayOrderStatusRespEnum;
 import com.wiflish.luban.framework.pay.core.enums.transfer.PayTransferTypeEnum;
-import com.wiflish.luban.framework.pay.xendit.dto.PayoutDTO;
 import com.wiflish.luban.framework.pay.xendit.dto.payment.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -157,25 +156,7 @@ public abstract class XenditPaymentAbstractPayClient extends AbstractPayClient<X
 
     @Override
     protected PayTransferRespDTO doUnifiedTransfer(PayTransferUnifiedReqDTO reqDTO) throws Throwable {
-        PayoutDTO payoutRespDTO = new PayoutDTO();
-        PayoutDTO payoutReqDTO = new PayoutDTO();
-        ChannelPropertiesDTO channelProperties = new ChannelPropertiesDTO();
-        channelProperties.setAccountHolderName(reqDTO.getUserName()).setAccountNumber(reqDTO.getBankAccount());
-
-        payoutReqDTO.setReferenceId(reqDTO.getOutTransferNo()).setChannelCode(reqDTO.getGatewayChannelCode()).setChannelProperties(channelProperties)
-                .setAmount(getActualPayAmount(reqDTO.getPrice())).setCurrency(reqDTO.getCurrency());
-        try {
-            payoutRespDTO = xenditInvoker.request(config.getBaseUrl() + PAYOUT_API.getApi(), HttpMethod.POST, config.getApiKey(), payoutReqDTO, PayoutDTO.class);
-        } catch (HttpClientErrorException e) {
-            log.error("发起转账调用失败, 渠道: xenditInvoice.payout , req: {}, resp: {}", JSON.toJSONString(payoutReqDTO), JSON.toJSONString(payoutRespDTO), e);
-            String responseBodyAsString = e.getResponseBodyAsString();
-            JSONObject jsonObject = JSON.parseObject(responseBodyAsString);
-            PayTransferRespDTO payTransferRespDTO = PayTransferRespDTO.waitingOf(null, reqDTO.getOutTransferNo(), responseBodyAsString);
-            payTransferRespDTO.setChannelErrorCode(jsonObject.getString("error_code")).setChannelErrorMsg(jsonObject.getString("message"));
-            return payTransferRespDTO;
-        }
-
-        return PayTransferRespDTO.dealingOf(payoutRespDTO.getId(), reqDTO.getOutTransferNo(), payoutRespDTO);
+        throw new UnsupportedOperationException();
     }
 
     @Override

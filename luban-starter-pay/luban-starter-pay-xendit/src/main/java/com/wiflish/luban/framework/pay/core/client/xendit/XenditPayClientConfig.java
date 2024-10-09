@@ -19,6 +19,7 @@ public class XenditPayClientConfig implements PayClientConfig {
     private String successUrl;
     private String accountName;
     private Long expireMinutes;
+    private String payoutChannelCode;
 
     @Override
     public void validate(Validator validator) {
