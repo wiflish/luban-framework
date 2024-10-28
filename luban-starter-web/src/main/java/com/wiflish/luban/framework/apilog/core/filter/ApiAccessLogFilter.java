@@ -18,6 +18,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -66,6 +67,8 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         // 提前获得参数，避免 XssFilter 过滤处理
         Map<String, String> queryString = ServletUtils.getParamMap(request);
         String requestBody = ServletUtils.isJsonRequest(request) ? ServletUtils.getBody(request) : null;
+        // password隐藏
+        requestBody = maskPassword(requestBody);
 
         try {
             // 继续过滤器
@@ -120,6 +123,19 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         accessLog.setBeginTime(beginTime);
         accessLog.setEndTime(LocalDateTime.now());
         accessLog.setDuration((int) LocalDateTimeUtil.between(accessLog.getBeginTime(), accessLog.getEndTime(), ChronoUnit.MILLIS));
+    }
+
+    public static String maskPassword(String jsonString) {
+        if (StrUtil.isEmpty(jsonString) || !jsonString.contains("password")){
+            return jsonString;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            jsonObject.replace("password", "******");
+            return jsonObject.toString();
+        } catch (Exception e) {
+            return jsonString;
+        }
     }
 
 }
