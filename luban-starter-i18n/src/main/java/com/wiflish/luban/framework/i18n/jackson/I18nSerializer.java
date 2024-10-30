@@ -121,12 +121,21 @@ public class I18nSerializer extends StdSerializer<Object> {
         return map;
     }
 
+    /**
+     * 顺序：请求参数/请求头/默认
+     * @return
+     */
     private Locale getLocale(){
         Locale locale = null;
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
-            locale = request.getLocale();
+            String paramLocale = request.getParameter("locale");
+            if (StrUtil.isNotEmpty(paramLocale)) {
+                locale = Locale.of(paramLocale);
+            } else {
+                locale = request.getLocale();
+            }
         }
         if (locale == null) {
             locale = i18nMessageSourceFacade.getDefaultLocale();
