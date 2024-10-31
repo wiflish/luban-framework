@@ -42,16 +42,12 @@ public class I18nSerializer extends StdSerializer<Object> {
         if (value instanceof String) {
             // 如果 value 本身是 String 类型且带有 @I18n 注解，直接进行国际化处理
             handleStringField(gen, (String) value);
-        } else if (value.getClass().isAnnotationPresent(I18n.class)) {
+        } else {
             // 处理带有 @I18n 注解的复杂对象
             // value属性转换到Map
             Map<String, Object> objectMap = convertObjectToMap(value);
             Map<String, Object> i18nMap = getI18nMap(value, objectMap);
             handleObjectStringField(gen, objectMap, i18nMap);
-        } else {
-            // 如果对象或属性没有 @I18n 注解，使用默认的序列化器
-            log.warn("value is not String or has no @I18n annotation, value: {}", value);
-            gen.writeObject(value);
         }
     }
 
