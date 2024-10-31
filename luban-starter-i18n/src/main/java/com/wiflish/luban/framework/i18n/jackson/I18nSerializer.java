@@ -46,7 +46,9 @@ public class I18nSerializer extends StdSerializer<Object> {
             // 处理带有 @I18n 注解的复杂对象
             // value属性转换到Map
             Map<String, Object> objectMap = convertObjectToMap(value);
+            // 获取多语言包
             Map<String, Object> i18nMap = getI18nMap(value, objectMap);
+            // 序列化输出
             handleObjectStringField(gen, objectMap, i18nMap);
         }
     }
@@ -84,7 +86,7 @@ public class I18nSerializer extends StdSerializer<Object> {
         for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
             String fieldName = entry.getKey();
             Object fieldValue = entry.getValue();
-            if (fieldValue instanceof String && i18nMap.containsKey(fieldName)) {
+            if (i18nMap.containsKey(fieldName)) {
                 fieldValue = i18nMap.get(fieldName);
             }
             gen.writeObjectField(fieldName, fieldValue);
