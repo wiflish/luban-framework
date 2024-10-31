@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.wiflish.luban.framework.i18n.annotation.I18n;
 import com.wiflish.luban.framework.i18n.spring.I18nMessageSourceFacade;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.json.JSONUtil;
@@ -130,13 +131,34 @@ public class I18nSerializer extends StdSerializer<Object> {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest request = requestAttributes.getRequest();
+
+            // 1. 从请求参数中获取区域设置
             String paramLocale = request.getParameter("locale");
             if (StrUtil.isNotEmpty(paramLocale)) {
                 locale = Locale.of(paramLocale);
             } else {
-                locale = request.getLocale();
+                // 2. 从 Cookie 中获取区域设置
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if ("locale".equals(cookie.getName())) {
+                            String cookieLocale = cookie.getValue();
+                            if (StrUtil.isNotEmpty(cookieLocale)) {
+                                locale = Locale.of(cookieLocale);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // 3. 从请求的 Accept-Language 头中获取区域设置
+                if (locale == null) {
+                    locale = request.getLocale();
+                }
             }
         }
+
+        // 4. 如果仍未获取到区域设置，使用默认区域设置
         if (locale == null) {
             locale = i18nMessageSourceFacade.getDefaultLocale();
         }
