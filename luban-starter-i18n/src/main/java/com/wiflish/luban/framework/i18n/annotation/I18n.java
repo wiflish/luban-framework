@@ -19,4 +19,5 @@ import java.lang.annotation.*;
 @JsonSerialize(using = I18nSerializer.class)
 public @interface I18n {
     String code() default "";
+    boolean cacheable() default true;
 }

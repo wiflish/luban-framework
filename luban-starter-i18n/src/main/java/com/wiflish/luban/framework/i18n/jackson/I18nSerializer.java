@@ -61,13 +61,19 @@ public class I18nSerializer extends StdSerializer<Object> {
             return i18nMap;
         }
         // 组装国际化code
-        String i18nCode = getI18nCode(value, id);
+        String i18nCode = getObjectI18nCode(value, id);
         // 获取动态多语言文本
         String i18nJsonText = null;
         try {
-            i18nJsonText = i18nMessageSourceFacade.getMessage(getLocale(), i18nCode, null);
+            // 如果 i18n注解的cacheable是false，则直接查询数据库
+            if (value.getClass().getAnnotation(I18n.class).cacheable()) {
+                i18nJsonText = i18nMessageSourceFacade.getMessage(getLocale(), i18nCode, null);
+            } else {
+                i18nJsonText = i18nMessageSourceFacade.getMessageFromDatabase(getLocale(), i18nCode);
+            }
         } catch (Exception e) {
             log.warn("object deserialize i18n error. handleStringField {}", e.getMessage());
+            return i18nMap;
         }
         if (StrUtil.isEmpty(i18nJsonText) || !JSONUtil.isTypeJSON(i18nJsonText)) {
             log.debug("i18nJsonText is null or incorrect format, i18nJsonText: {}", i18nJsonText);
@@ -77,8 +83,8 @@ public class I18nSerializer extends StdSerializer<Object> {
         return i18nMap;
     }
 
-    private static String getI18nCode(Object value, Object id) {
-        return value.getClass().getAnnotation(I18n.class).code() + "_" + id;
+    private static String getObjectI18nCode(Object value, Object id) {
+        return value.getClass().getAnnotation(I18n.class).code() + "-" + id;
     }
 
     private static void handleObjectStringField(JsonGenerator gen, Map<String, Object> objectMap, Map<String, Object> i18nMap) throws IOException {

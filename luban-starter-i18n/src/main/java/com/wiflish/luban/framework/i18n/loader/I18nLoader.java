@@ -11,4 +11,6 @@ public interface I18nLoader {
     void refreshAll();
     String getMessagePattern(String code);
     String getMessagePattern(String code, Locale locale);
+
+    String getMessageFromDatabase(Locale locale, String i18nCode);
 }

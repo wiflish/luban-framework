@@ -1,6 +1,7 @@
 package com.wiflish.luban.framework.i18n.spring;
 
 import com.wiflish.luban.framework.i18n.config.I18nProperties;
+import com.wiflish.luban.framework.i18n.loader.I18nLoader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 
@@ -15,6 +16,7 @@ import java.util.Locale;
 public class I18nMessageSourceFacade {
     private final MessageSource messageSource;
     private final I18nProperties i18nProperties;
+    private final I18nLoader i18nLoader;
 
     public String getMessage(String code) {
         return getMessage(code, null);
@@ -41,5 +43,9 @@ public class I18nMessageSourceFacade {
             language = language.replaceAll("-", "_");
         }
         return Locale.of(language);
+    }
+
+    public String getMessageFromDatabase(Locale locale, String i18nCode) {
+        return i18nLoader.getMessageFromDatabase(locale, i18nCode);
     }
 }

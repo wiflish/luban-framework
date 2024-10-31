@@ -73,6 +73,11 @@ public class I18nLoaderLocalCacheImpl implements I18nLoader {
         return ObjectUtils.isEmpty(messagePattern) ? code : messagePattern;
     }
 
+    @Override
+    public String getMessageFromDatabase(Locale locale, String i18nCode) {
+        return i18nApi.getMessageFromDatabase(locale, i18nCode);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     @Async
     @Override

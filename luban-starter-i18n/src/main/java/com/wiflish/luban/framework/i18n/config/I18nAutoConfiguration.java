@@ -28,7 +28,7 @@ public class I18nAutoConfiguration {
     }
 
     @Bean
-    public I18nMessageSourceFacade messageSourceFacade(MessageSource messageSource, I18nProperties i18nProperties) {
-        return new I18nMessageSourceFacade(messageSource, i18nProperties);
+    public I18nMessageSourceFacade messageSourceFacade(MessageSource messageSource, I18nProperties i18nProperties, I18nLoader i18nLoader) {
+        return new I18nMessageSourceFacade(messageSource, i18nProperties, i18nLoader);
     }
 }
