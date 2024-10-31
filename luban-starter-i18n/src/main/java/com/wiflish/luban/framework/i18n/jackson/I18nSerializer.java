@@ -16,6 +16,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -40,16 +42,17 @@ public class I18nSerializer extends StdSerializer<Object> {
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         if (value instanceof String) {
-            // 如果 value 本身是 String 类型且带有 @I18n 注解，直接进行国际化处理
-            handleStringField(gen, (String) value);
+            // 如果 value 本身是 String 类型，直接进行国际化处理
+            gen.writeString(getI18nStringValue((String) value));
         } else {
-            // 处理带有 @I18n 注解的复杂对象
             // value属性转换到Map
-            Map<String, Object> objectMap = convertObjectToMap(value);
+            Map<String, Object> objectMap = new HashMap<>();// 所有属性
+            Map<String, Object> annotationsPropertyMap = new HashMap<>();// 带有I18n注解的属性
+            convertObjectToMap(value, objectMap, annotationsPropertyMap);
             // 获取多语言包
             Map<String, Object> i18nMap = getI18nMap(value, objectMap);
             // 序列化输出
-            handleObjectStringField(gen, objectMap, i18nMap);
+            handleObjectStringField(gen, objectMap, annotationsPropertyMap, i18nMap);
         }
     }
 
@@ -67,7 +70,7 @@ public class I18nSerializer extends StdSerializer<Object> {
         try {
             // 如果 i18n注解的cacheable是false，则直接查询数据库
             if (value.getClass().getAnnotation(I18n.class).cacheable()) {
-                i18nJsonText = i18nMessageSourceFacade.getMessage(getLocale(), i18nCode, null);
+                i18nJsonText = getI18nStringValue(i18nCode);
             } else {
                 i18nJsonText = i18nMessageSourceFacade.getMessageFromDatabase(getLocale(), i18nCode);
             }
@@ -87,20 +90,24 @@ public class I18nSerializer extends StdSerializer<Object> {
         return value.getClass().getAnnotation(I18n.class).code() + "-" + id;
     }
 
-    private static void handleObjectStringField(JsonGenerator gen, Map<String, Object> objectMap, Map<String, Object> i18nMap) throws IOException {
+    private void handleObjectStringField(JsonGenerator gen, Map<String, Object> objectMap, Map<String, Object> annotationsPropertyMap, Map<String, Object> i18nMap) throws IOException {
         gen.writeStartObject();
         for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
             String fieldName = entry.getKey();
             Object fieldValue = entry.getValue();
-            if (i18nMap.containsKey(fieldName)) {
-                fieldValue = i18nMap.get(fieldName);
+            if (annotationsPropertyMap.containsKey(fieldName)) {
+                gen.writeObjectField(fieldName, getI18nStringValue((String) fieldValue));
+            } else {
+                if (i18nMap.containsKey(fieldName)) {
+                    fieldValue = i18nMap.get(fieldName);
+                }
+                gen.writeObjectField(fieldName, fieldValue);
             }
-            gen.writeObjectField(fieldName, fieldValue);
         }
         gen.writeEndObject();
     }
 
-    private void handleStringField(JsonGenerator gen, String stringValue) throws IOException {
+    private String getI18nStringValue(String stringValue) throws IOException {
         String i18nStringValue = stringValue;
         if (stringValue != null) {
             try {
@@ -109,21 +116,32 @@ public class I18nSerializer extends StdSerializer<Object> {
                 log.warn("deserialize i18n error. handleStringField {}", e.getMessage());
             }
         }
-        gen.writeString(i18nStringValue);
+        return i18nStringValue;
     }
 
-    private static Map<String, Object> convertObjectToMap(Object value) {
-        Map<String, Object> map = new HashMap<>();
+    private static void convertObjectToMap(Object value, Map<String, Object> objectMap, Map<String, Object> annotationsPropertyMap) {
         Class<?> clazz = value.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                map.put(field.getName(), field.get(value));
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Error accessing field " + field.getName(), e);
+        // 递归处理类及其所有父类的字段
+        while (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                String fieldName = field.getName();
+                String getterMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+
+                try {
+                    Method getterMethod = clazz.getMethod(getterMethodName);
+                    Object fieldValue = getterMethod.invoke(value);
+
+                    if (field.isAnnotationPresent(I18n.class)) {
+                        annotationsPropertyMap.put(fieldName, fieldValue);
+                    }
+                    objectMap.put(fieldName, fieldValue);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException("Error accessing field or method " + fieldName, e);
+                }
             }
+            clazz = clazz.getSuperclass(); // 获取父类
         }
-        return map;
     }
 
     /**
