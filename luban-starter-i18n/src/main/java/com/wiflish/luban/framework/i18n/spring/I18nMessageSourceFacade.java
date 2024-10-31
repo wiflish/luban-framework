@@ -30,12 +30,16 @@ public class I18nMessageSourceFacade {
 
     public String getMessage(Locale locale, String code, Object[] args, String defaultMessage) {
         if (locale == null) {
-            String language = i18nProperties.getLanguage();
-            if (language.contains("-")) {
-                language = language.replaceAll("-", "_");
-            }
-            locale = Locale.of(language);
+            locale = getDefaultLocale();
         }
         return messageSource.getMessage(code, args, defaultMessage, locale);
+    }
+
+    public Locale getDefaultLocale() {
+        String language = i18nProperties.getLanguage();
+        if (language.contains("-")) {
+            language = language.replaceAll("-", "_");
+        }
+        return Locale.of(language);
     }
 }

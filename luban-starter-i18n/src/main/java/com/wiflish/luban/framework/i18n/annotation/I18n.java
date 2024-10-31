@@ -13,9 +13,10 @@ import java.lang.annotation.*;
  * @since 2024-07-04
  */
 @Documented
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside // 此注解是其他所有 jackson 注解的元注解，打上了此注解的注解表明是 jackson 注解的一部分
 @JsonSerialize(using = I18nSerializer.class)
 public @interface I18n {
+    String code() default "";
 }
