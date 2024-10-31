@@ -1,5 +1,7 @@
 package com.wiflish.luban.framework.i18n.jackson;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -15,7 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -40,26 +42,30 @@ public class I18nSerializer extends StdSerializer<Object> {
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         if (value instanceof String) {
-            // 如果 value 本身是 String 类型且带有 @I18n 注解，直接进行国际化处理
-            handleStringField(gen, (String) value);
-        } else {
-            // 处理带有 @I18n 注解的复杂对象
-            // value属性转换到Map
-            Map<String, Object> objectMap = convertObjectToMap(value);
-            // 获取多语言包
-            Map<String, Object> i18nMap = getI18nMap(value, objectMap);
-            // 序列化输出
-            handleObjectStringField(gen, objectMap, i18nMap);
+            // 如果 value 本身是 String 类型，直接进行国际化处理
+            gen.writeString(getI18nStringValue((String) value));
+        } else { // 处理类注解
+            Map<String, Object> i18nMap = getI18nMap(value);
+            BeanUtil.copyProperties(i18nMap, value);
+            Arrays.stream(ReflectUtil.getFields(value.getClass())).filter(field -> field.getAnnotation(I18n.class) != null).forEach(field -> {
+                field.setAccessible(true);
+                ReflectUtil.setFieldValue(value, field, getI18nStringValue(ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()))));
+            });
+            gen.writeStartObject();
+            Arrays.stream(ReflectUtil.getFields(value.getClass())).forEach(field -> {
+                try {
+                    gen.writeObjectField(field.getName(), ReflectUtil.getFieldValue(value, field));
+                } catch (IOException e) {
+                    log.warn("deserialize i18n error. serialize {}", e.getMessage());
+                }
+            });
+            gen.writeEndObject();
         }
     }
 
-    private Map<String, Object> getI18nMap(Object value, Map<String, Object> objectMap) {
+    private Map<String, Object> getI18nMap(Object value) {
+        Object id = ReflectUtil.getFieldValue(value, "id");
         Map<String, Object> i18nMap = new HashMap<>();
-        Object id = objectMap.get("id");
-        if (id == null) {
-            log.debug("id is null, object: {}", objectMap);
-            return i18nMap;
-        }
         // 组装国际化code
         String i18nCode = getObjectI18nCode(value, id);
         // 获取动态多语言文本
@@ -67,7 +73,7 @@ public class I18nSerializer extends StdSerializer<Object> {
         try {
             // 如果 i18n注解的cacheable是false，则直接查询数据库
             if (value.getClass().getAnnotation(I18n.class).cacheable()) {
-                i18nJsonText = i18nMessageSourceFacade.getMessage(getLocale(), i18nCode, null);
+                i18nJsonText = getI18nStringValue(i18nCode);
             } else {
                 i18nJsonText = i18nMessageSourceFacade.getMessageFromDatabase(getLocale(), i18nCode);
             }
@@ -87,87 +93,46 @@ public class I18nSerializer extends StdSerializer<Object> {
         return value.getClass().getAnnotation(I18n.class).code() + "-" + id;
     }
 
-    private static void handleObjectStringField(JsonGenerator gen, Map<String, Object> objectMap, Map<String, Object> i18nMap) throws IOException {
-        gen.writeStartObject();
-        for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
-            String fieldName = entry.getKey();
-            Object fieldValue = entry.getValue();
-            if (i18nMap.containsKey(fieldName)) {
-                fieldValue = i18nMap.get(fieldName);
-            }
-            gen.writeObjectField(fieldName, fieldValue);
-        }
-        gen.writeEndObject();
-    }
-
-    private void handleStringField(JsonGenerator gen, String stringValue) throws IOException {
-        String i18nStringValue = stringValue;
+    private String getI18nStringValue(String stringValue) {
         if (stringValue != null) {
             try {
-                i18nStringValue = i18nMessageSourceFacade.getMessage(getLocale(), stringValue, null);
+                return i18nMessageSourceFacade.getMessage(getLocale(), stringValue, null);
             } catch (Exception e) {
                 log.warn("deserialize i18n error. handleStringField {}", e.getMessage());
             }
         }
-        gen.writeString(i18nStringValue);
-    }
-
-    private static Map<String, Object> convertObjectToMap(Object value) {
-        Map<String, Object> map = new HashMap<>();
-        Class<?> clazz = value.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                map.put(field.getName(), field.get(value));
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Error accessing field " + field.getName(), e);
-            }
-        }
-        return map;
+        return stringValue;
     }
 
     /**
      * 顺序：请求参数/请求头/默认
-     * @return
+     * @return Locale
      */
     private Locale getLocale(){
-        Locale locale = null;
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (requestAttributes != null) {
-            HttpServletRequest request = requestAttributes.getRequest();
+        if (requestAttributes == null) {
+            return i18nMessageSourceFacade.getDefaultLocale();
+        }
+        HttpServletRequest request = requestAttributes.getRequest();
+        // 1. 从请求参数中获取区域设置（在管理端多语言编辑页面需要通过参数指定显示）
+        String paramLocale = request.getParameter("locale");
+        if (StrUtil.isNotEmpty(paramLocale)) {
+            return Locale.of(paramLocale);
+        }
 
-            // 1. 从请求参数中获取区域设置
-            String paramLocale = request.getParameter("locale");
-            if (StrUtil.isNotEmpty(paramLocale)) {
-                locale = Locale.of(paramLocale);
-            } else {
-                // 2. 从 Cookie 中获取区域设置
-                Cookie[] cookies = request.getCookies();
-                if (cookies != null) {
-                    for (Cookie cookie : cookies) {
-                        if ("locale".equals(cookie.getName())) {
-                            String cookieLocale = cookie.getValue();
-                            if (StrUtil.isNotEmpty(cookieLocale)) {
-                                locale = Locale.of(cookieLocale);
-                                break;
-                            }
-                        }
-                    }
+        // 1. 从cookie中获取区域设置
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (!"locale".equals(cookie.getName())) {
+                    continue;
                 }
-
-                // 3. 从请求的 Accept-Language 头中获取区域设置
-                if (locale == null) {
-                    locale = request.getLocale();
+                String cookieLocale = cookie.getValue();
+                if (StrUtil.isNotEmpty(cookieLocale)) {
+                    return Locale.of(cookieLocale);
                 }
             }
         }
-
-        // 4. 如果仍未获取到区域设置，使用默认区域设置
-        if (locale == null) {
-            locale = i18nMessageSourceFacade.getDefaultLocale();
-        }
-        return locale;
+        return request.getLocale() == null ? i18nMessageSourceFacade.getDefaultLocale() : request.getLocale();
     }
-
-
 }
