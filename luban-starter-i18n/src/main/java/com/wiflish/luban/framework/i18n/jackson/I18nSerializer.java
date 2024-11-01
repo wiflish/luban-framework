@@ -53,7 +53,9 @@ public class I18nSerializer extends StdSerializer<Object> {
                         // todo 处理多语言字段
                         if ("sliderPicUrls".equals(field.getName())){
                             List list = (List) ReflectUtil.getFieldValue(value, field);
-                            list.addFirst(ReflectUtil.getFieldValue(value, "picUrl"));
+                            if (list != null) {
+                                list.addFirst(ReflectUtil.getFieldValue(value, "picUrl"));
+                            }
                         }
                         gen.writeObjectField(field.getName(), ReflectUtil.invoke(value, StrUtil.genGetter(field.getName())));
                     }
