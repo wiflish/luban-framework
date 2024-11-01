@@ -47,16 +47,16 @@ public class I18nSerializer extends StdSerializer<Object> {
         } else { // 处理类注解
             Map<String, Object> i18nMap = getI18nMap(value);
             BeanUtil.copyProperties(i18nMap, value);
-            Arrays.stream(ReflectUtil.getFields(value.getClass())).filter(field -> field.getAnnotation(I18n.class) != null).forEach(field -> {
-                field.setAccessible(true);
-                ReflectUtil.setFieldValue(value, field, getI18nStringValue(ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()))));
-            });
             gen.writeStartObject();
             Arrays.stream(ReflectUtil.getFields(value.getClass())).forEach(field -> {
                 try {
-                    gen.writeObjectField(field.getName(), ReflectUtil.getFieldValue(value, field));
+                    if (field.getAnnotation(I18n.class) != null){
+                        gen.writeObjectField(field.getName(), getI18nStringValue(ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()))));
+                    } else {
+                        gen.writeObjectField(field.getName(), ReflectUtil.invoke(value, StrUtil.genGetter(field.getName())));
+                    }
                 } catch (IOException e) {
-                    log.warn("deserialize i18n error. serialize {}", e.getMessage());
+                    log.warn("serialize i18n error. serialize {}", e.getMessage());
                 }
             });
             gen.writeEndObject();
@@ -78,7 +78,7 @@ public class I18nSerializer extends StdSerializer<Object> {
                 i18nJsonText = i18nMessageSourceFacade.getMessageFromDatabase(getLocale(), i18nCode);
             }
         } catch (Exception e) {
-            log.warn("object deserialize i18n error. handleStringField {}", e.getMessage());
+            log.warn("get i18nJsonText error. getI18nMap {}", e.getMessage());
             return i18nMap;
         }
         if (StrUtil.isEmpty(i18nJsonText) || !JSONUtil.isTypeJSON(i18nJsonText)) {
@@ -98,7 +98,7 @@ public class I18nSerializer extends StdSerializer<Object> {
             try {
                 return i18nMessageSourceFacade.getMessage(getLocale(), stringValue, null);
             } catch (Exception e) {
-                log.warn("deserialize i18n error. handleStringField {}", e.getMessage());
+                log.warn("getI18nStringValue error. {}", e.getMessage());
             }
         }
         return stringValue;
