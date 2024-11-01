@@ -17,10 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 国际化处理.
@@ -53,6 +50,11 @@ public class I18nSerializer extends StdSerializer<Object> {
                     if (field.getAnnotation(I18n.class) != null){
                         gen.writeObjectField(field.getName(), getI18nStringValue(ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()))));
                     } else {
+                        // todo 处理多语言字段
+                        if ("sliderPicUrls".equals(field.getName())){
+                            List list = (List) ReflectUtil.getFieldValue(value, field);
+                            list.addFirst(ReflectUtil.getFieldValue(value, "picUrl"));
+                        }
                         gen.writeObjectField(field.getName(), ReflectUtil.invoke(value, StrUtil.genGetter(field.getName())));
                     }
                 } catch (IOException e) {
