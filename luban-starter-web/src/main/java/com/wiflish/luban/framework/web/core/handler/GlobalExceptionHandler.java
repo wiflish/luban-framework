@@ -19,6 +19,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -131,7 +132,7 @@ public class GlobalExceptionHandler {
         log.warn("[methodArgumentNotValidExceptionExceptionHandler]", ex);
         FieldError fieldError = ex.getBindingResult().getFieldError();
         assert fieldError != null; // 断言，避免告警
-        String message = renderMessage(RequestContextUtils.getLocale(request), BAD_REQUEST, fieldError.getDefaultMessage());
+        String message = renderMessage(RequestContextUtils.getLocale(request), fieldError.getDefaultMessage(), fieldError.getDefaultMessage(), ArrayUtils.toStringArray(fieldError.getArguments()));
         return CommonResult.error(BAD_REQUEST.getCode(), message);
     }
 
