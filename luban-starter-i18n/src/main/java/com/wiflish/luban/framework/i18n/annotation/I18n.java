@@ -12,6 +12,7 @@ import java.lang.annotation.*;
  * @author wiflish
  * @since 2024-07-04
  */
+@Inherited
 @Documented
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
