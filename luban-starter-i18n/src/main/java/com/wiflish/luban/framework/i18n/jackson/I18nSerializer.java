@@ -3,6 +3,7 @@ package com.wiflish.luban.framework.i18n.jackson;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.annotation.AnnotationUtil;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -50,10 +52,24 @@ public class I18nSerializer extends StdSerializer<Object> {
             gen.writeStartObject();
             Arrays.stream(ReflectUtil.getFields(value.getClass())).forEach(field -> {
                 try {
-                    if (field.getAnnotation(I18n.class) != null){
-                        gen.writeObjectField(field.getName(), i18nMessageSourceFacade.getMessage(ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()))));
+                    Object fieldValue = ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()));
+                    if (field.getAnnotation(I18n.class) != null) {
+                        gen.writeObjectField(field.getName(), i18nMessageSourceFacade.getMessage(fieldValue.toString()));
+                    } else if (field.getAnnotation(JsonFormat.class) != null){
+                        JsonFormat jsonFormat = field.getAnnotation(JsonFormat.class);
+                        String pattern = jsonFormat.pattern();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                        if (fieldValue instanceof java.time.LocalDate) {
+                            gen.writeStringField(field.getName(), ((java.time.LocalDate) fieldValue).format(formatter));
+                        } else if (fieldValue instanceof java.time.LocalDateTime) {
+                            gen.writeStringField(field.getName(), ((java.time.LocalDateTime) fieldValue).format(formatter));
+                        } else if (fieldValue instanceof java.time.LocalTime) {
+                            gen.writeStringField(field.getName(), ((java.time.LocalTime) fieldValue).format(formatter));
+                        } else {
+                            gen.writeObjectField(field.getName(), fieldValue);
+                        }
                     } else {
-                        gen.writeObjectField(field.getName(), ReflectUtil.invoke(value, StrUtil.genGetter(field.getName())));
+                        gen.writeObjectField(field.getName(), fieldValue);
                     }
                 } catch (IOException e) {
                     log.warn("serialize i18n error. serialize {}", e.getMessage());
