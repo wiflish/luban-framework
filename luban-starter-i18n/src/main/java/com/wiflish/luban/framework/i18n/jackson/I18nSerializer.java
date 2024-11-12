@@ -55,23 +55,21 @@ public class I18nSerializer extends StdSerializer<Object> {
                     Object fieldValue = ReflectUtil.invoke(value, StrUtil.genGetter(field.getName()));
                     if (field.getAnnotation(I18n.class) != null) {
                         gen.writeObjectField(field.getName(), i18nMessageSourceFacade.getMessage(fieldValue.toString()));
-                    } else {
+                    } else if (field.getAnnotation(JsonFormat.class) != null){
                         JsonFormat jsonFormat = field.getAnnotation(JsonFormat.class);
-                        if (jsonFormat != null) {
-                            String pattern = jsonFormat.pattern();
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-                            if (fieldValue instanceof java.time.LocalDate) {
-                                gen.writeStringField(field.getName(), ((java.time.LocalDate) fieldValue).format(formatter));
-                            } else if (fieldValue instanceof java.time.LocalDateTime) {
-                                gen.writeStringField(field.getName(), ((java.time.LocalDateTime) fieldValue).format(formatter));
-                            } else if (fieldValue instanceof java.time.LocalTime) {
-                                gen.writeStringField(field.getName(), ((java.time.LocalTime) fieldValue).format(formatter));
-                            } else {
-                                gen.writeObjectField(field.getName(), fieldValue);
-                            }
+                        String pattern = jsonFormat.pattern();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+                        if (fieldValue instanceof java.time.LocalDate) {
+                            gen.writeStringField(field.getName(), ((java.time.LocalDate) fieldValue).format(formatter));
+                        } else if (fieldValue instanceof java.time.LocalDateTime) {
+                            gen.writeStringField(field.getName(), ((java.time.LocalDateTime) fieldValue).format(formatter));
+                        } else if (fieldValue instanceof java.time.LocalTime) {
+                            gen.writeStringField(field.getName(), ((java.time.LocalTime) fieldValue).format(formatter));
                         } else {
                             gen.writeObjectField(field.getName(), fieldValue);
                         }
+                    } else {
+                        gen.writeObjectField(field.getName(), fieldValue);
                     }
                 } catch (IOException e) {
                     log.warn("serialize i18n error. serialize {}", e.getMessage());
