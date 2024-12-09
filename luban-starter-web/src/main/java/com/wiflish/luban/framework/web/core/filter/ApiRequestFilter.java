@@ -20,7 +20,7 @@ public abstract class ApiRequestFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         // 只过滤 API 请求的地址
         return !StrUtil.startWithAny(request.getRequestURI(), webProperties.getAdminApi().getPrefix(),
-                webProperties.getAppApi().getPrefix());
+                webProperties.getAppApi().getPrefix(), webProperties.getPartnerApi().getPrefix());
     }
 
 }

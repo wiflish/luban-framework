@@ -23,6 +23,10 @@ public abstract class AuthorizeRequestsCustomizer
         return webProperties.getAdminApi().getPrefix() + url;
     }
 
+    protected String buildPartnerApi(String url) {
+        return webProperties.getPartnerApi().getPrefix() + url;
+    }
+
     protected String buildAppApi(String url) {
         return webProperties.getAppApi().getPrefix() + url;
     }
