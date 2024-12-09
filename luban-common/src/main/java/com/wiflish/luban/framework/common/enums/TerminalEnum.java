@@ -20,6 +20,7 @@ public enum TerminalEnum implements IntArrayValuable {
     WECHAT_WAP(11, "微信公众号"),
     H5(20, "H5 移动端"),
     APP(31, "手机 App"),
+    PARTNER_STORE(70, "合作伙伴-门店端"),
     ;
 
     public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(TerminalEnum::getTerminal).toArray();
